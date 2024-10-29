@@ -1,0 +1,90 @@
+﻿<Window x:Class="kiosk_snapprint.MainWindow"
+         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+ xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:local="clr-namespace:kiosk_snapprint"
+ mc:Ignorable="d"
+ Title="MainWindow" 
+ WindowStyle="None" 
+ WindowState="Maximized" 
+ ResizeMode="NoResize"
+ Topmost="True"
+ Height="450" 
+ Width="800">
+    <Viewbox>
+        <Grid>
+            <!-- ContentControl that will hold dynamic content -->
+            <ContentControl x:Name="MainContent">
+                <Grid Width="869">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0*"/>
+                        <ColumnDefinition Width="*" />
+                        <!-- Use * to make it flexible -->
+                    </Grid.ColumnDefinitions>
+
+                    <!-- First image -->
+                    <Image Margin="343,30,350,304" Grid.Column="1" />
+
+                    <!-- Second image -->
+                    <Image Source="/wow.png" Margin="325,7,334,297" Grid.Column="1" />
+
+                    <!-- Label -->
+                    <Label Content="HOW WOULD YOU LIKE TO PRINT?" 
+                        HorizontalAlignment="Center" 
+                        VerticalAlignment="Top" 
+                        FontWeight="Bold" 
+                        FontSize="24" 
+                        Grid.Column="1" 
+                        Margin="0,240,0,0" 
+                        Width="404" />
+
+                    <!-- Button 1: Scan QR Code -->
+                    <Button HorizontalAlignment="Left" 
+                         Height="115" 
+                         Margin="53,323,0,0" 
+                         VerticalAlignment="Top" 
+                         Width="178" 
+                         Background="White" 
+                         Grid.Column="1"
+                         Click="GoToQRCodePage_Click">
+
+                        <StackPanel Orientation="Vertical">
+                            <Image Source="/scanner.png" Height="86" Width="86" />
+                            <TextBlock Text="Scan QR Code" HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+
+                    <!-- Button 2: Flash Drive -->
+                    <Button HorizontalAlignment="Left" 
+                         Height="115" 
+                         Margin="351,323,0,0" 
+                         VerticalAlignment="Top" 
+                         Width="180" 
+                         Background="White" 
+                         Grid.Column="1" Click="Button_Click">
+                        <StackPanel Orientation="Vertical">
+                            <Image Source="/flashdrive.png" Height="81" Width="161" />
+                            <TextBlock Text="Flash Drive" HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+
+                    <!-- Button 3: Enter Unique Code -->
+                    <Button HorizontalAlignment="Left" 
+                         Height="115" 
+                         Margin="657,323,0,0" 
+                         VerticalAlignment="Top" 
+                         Width="163" 
+                         Background="White" 
+                         Grid.Column="1" Click="Button_Click_1">
+                        <StackPanel Orientation="Vertical">
+                            <Image Source="/passcode.png" Height="81" Width="152" />
+                            <TextBlock Text="Enter Unique Code" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                </Grid>
+            </ContentControl>
+        </Grid>
+    </Viewbox>
+</Window>
