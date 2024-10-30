@@ -39,7 +39,7 @@ namespace kiosk_snapprint
         private void DisplayQRCode()
         {
             // Generate the QR code URL with the session ID
-            string url = $"http://192.168.1.1/HtmlFiles/upload.html?sessionId={_sessionId}";
+            string url = $"http://192.168.1.1/HtmlFiles/upload/index?sessionId={_sessionId}";
 
 
             // Create the QR code image
