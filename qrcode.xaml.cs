@@ -38,8 +38,11 @@ namespace kiosk_snapprint
 
         private void DisplayQRCode()
         {
-            // Generate the QR code URL with the session ID
-            string url = $"http://192.168.1.1/HtmlFiles/upload/index?sessionId={_sessionId}";
+            // Generate the QR code URL with a link to a Bluetooth pairing guide or session ID
+            
+            string url = $"http://192.168.137.1/Upload/Index?sessionId={_sessionId}";
+
+
 
 
             // Create the QR code image
