@@ -121,5 +121,8 @@ namespace kiosk_snapprint
             MainContent.Content = uniquecodePage;
         }
 
+
+
+
     }
 }

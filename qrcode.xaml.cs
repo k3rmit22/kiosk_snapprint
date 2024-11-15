@@ -1,66 +1,121 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
+using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Drawing;
 using QRCoder;
+using System.Net.Http.Json;
+using Microsoft.AspNetCore.SignalR.Client;
 
 namespace kiosk_snapprint
 {
-    /// <summary>
-    /// Interaction logic for qrcode.xaml
-    /// </summary>
     public partial class qrcode : UserControl
     {
-        private string _sessionId;
+        private string sessionId;
+        private HubConnection hubConnection;
+
         public qrcode(string sessionId)
         {
             InitializeComponent();
-            _sessionId = sessionId;
+            this.sessionId = sessionId;
+
             DisplayQRCode();
+            SessionIdTextBlock.Text = $"Session ID: {sessionId}";
 
-            SessionIdTextBlock.Text = $"Session ID: {_sessionId}";
-
-
-
+            SetupSignalR();    // Initialize SignalR connection
         }
-
         private void DisplayQRCode()
         {
-            // Generate the QR code URL with a link to a Bluetooth pairing guide or session ID
-            
-            string url = $"http://192.168.137.1/Upload/Index?sessionId={_sessionId}";
-
-
-
-
-            // Create the QR code image
+            string url = $"http://192.168.137.1:5082/Upload/Index?sessionId={sessionId}";
             Bitmap qrCodeImage = GenerateQRCode(url);
-
-            // Display the QR code in the Image control (assuming an Image control named QrCodeImageControl)
             QrCodeImageControl.Source = BitmapToImageSource(qrCodeImage);
         }
+
+        private async void SetupSignalR()
+        {
+            // Set up connection to the SignalR hub
+            hubConnection = new HubConnectionBuilder()
+                .WithUrl("http://192.168.137.1:5082/Hubs/fileUploadHub") // Ensure this matches your actual hub URL
+                .Build();
+
+            // Register a method to receive messages from the server
+            hubConnection.On<string>("ReceiveMessage", async (message) =>
+            {
+                // Check if the message indicates a successful file upload for this session
+                if (message.Contains($"File uploaded successfully for session {sessionId}"))
+                {
+                    // Fetch file details after receiving the SignalR notification
+                    await FetchFileDetails();
+                }
+            });
+
+            // Start the SignalR connection
+            try
+            {
+                await hubConnection.StartAsync();
+                Console.WriteLine("Connected to SignalR hub.");
+            }
+            catch (Exception ex)
+            {
+                ShowError($"Error connecting to SignalR hub: {ex.Message}");
+            }
+        }
+
+        private async Task FetchFileDetails()
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    string apiUrl = $"http://192.168.137.1:5082/api/upload/getfileinfo?sessionId={sessionId}";
+
+                    // Send request to retrieve file details
+                    var response = await client.GetAsync(apiUrl);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        // Deserialize file details
+                        var fileDetails = await response.Content.ReadFromJsonAsync<FileDetails>();
+
+                        // Verify the session ID to ensure the correct file
+                        if (fileDetails != null && fileDetails.SessionId == sessionId)
+                        {
+                            // Navigate to the PDF display with file details
+                            NavigateToPDFDisplay(fileDetails);
+                        }
+                        else
+                        {
+                            ShowError("Session ID mismatch.");
+                        }
+                    }
+                    else
+                    {
+                        ShowError("Unable to retrieve file details.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowError("Error fetching file details: " + ex.Message);
+            }
+        }
+
+
+
 
         private Bitmap GenerateQRCode(string url)
         {
             QRCodeGenerator qrGenerator = new QRCodeGenerator();
             QRCodeData qrCodeData = qrGenerator.CreateQrCode(url, QRCodeGenerator.ECCLevel.Q);
             QRCode qrCode = new QRCode(qrCodeData);
-            return qrCode.GetGraphic(20); // Adjust the size as needed
+            return qrCode.GetGraphic(20); // Size customization
         }
 
-        // Helper function to convert Bitmap to ImageSource for WPF Image control
         private ImageSource BitmapToImageSource(Bitmap bitmap)
         {
             using (MemoryStream memory = new MemoryStream())
@@ -74,15 +129,44 @@ namespace kiosk_snapprint
                 bitmapImage.EndInit();
                 return bitmapImage;
             }
-
-
-
-
-
-
-
-
-
         }
+
+        private void NavigateToPDFDisplay(FileDetails fileDetails)
+        {
+            var pdfDisplay = new PDFDisplay(fileDetails.FilePath, fileDetails.FileName, fileDetails.PageSize, fileDetails.PageCount);
+
+            // Retrieve the current main window instance and set the content
+            if (Application.Current.MainWindow is MainWindow mainWindow)
+            {
+                mainWindow.MainContent.Content = pdfDisplay; // Update MainContent in the MainWindow instance
+            }
+            else
+            {
+                ShowError("Main window instance not found.");
+            }
+        }
+
+        private void ShowError(string message)
+        {
+            MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        private async void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            // Clean up the SignalR connection when the control is unloaded
+            if (hubConnection != null)
+            {
+                await hubConnection.DisposeAsync();
+            }
+        }
+    }
+
+    public class FileDetails
+    {
+        public string SessionId { get; set; }
+        public string FilePath { get; set; }
+        public string FileName { get; set; }
+        public string PageSize { get; set; }
+        public int PageCount { get; set; }
     }
 }

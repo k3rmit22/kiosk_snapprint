@@ -6,14 +6,13 @@
  xmlns:local="clr-namespace:kiosk_snapprint"
  mc:Ignorable="d"
  Title="MainWindow" 
- WindowStyle="None" 
- WindowState="Maximized" 
  ResizeMode="NoResize"
  Topmost="True"
  Height="450" 
- Width="800">
-    <Viewbox>
+ Width="800" WindowStartupLocation="CenterScreen">
+    <Viewbox Margin="0,20,33,0">
         <Grid>
+            
             <!-- ContentControl that will hold dynamic content -->
             <ContentControl x:Name="MainContent">
                 <Grid Width="869">
