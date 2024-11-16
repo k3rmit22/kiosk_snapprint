@@ -32,25 +32,63 @@ namespace kiosk_snapprint
         private void DisplayQRCode()
         {
             string url = $"http://192.168.137.1:5082/Upload/Index?sessionId={sessionId}";
+            Console.WriteLine($"Generated URL: {url}");
             Bitmap qrCodeImage = GenerateQRCode(url);
             QrCodeImageControl.Source = BitmapToImageSource(qrCodeImage);
+
         }
 
+        //private async void SetupSignalR()
+        //{
+        //    var hubConnection = new HubConnectionBuilder()
+        //        .WithUrl("http://192.168.137.1:5082/Hubs/fileUploadHub")
+        //        .Build();
+
+        //    // Register a method to receive messages from the server
+        //    hubConnection.On<string>("ReceiveMessage", async (message) =>
+        //    {
+        //        System.Diagnostics.Debug.WriteLine($"Received SignalR message: {message}");
+        //        if (message.Contains($"File uploaded successfully for session {sessionId}"))
+        //        {
+        //            await FetchFileDetails();
+        //        }
+        //    });
+
+        //    // Start the SignalR connection
+        //    try
+        //    {
+        //        await hubConnection.StartAsync();
+        //        System.Diagnostics.Debug.WriteLine("Connected to SignalR hub.");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        System.Diagnostics.Debug.WriteLine($"Error connecting to SignalR hub: {ex.Message}");
+        //    }
+        //}
         private async void SetupSignalR()
         {
-            // Set up connection to the SignalR hub
-            hubConnection = new HubConnectionBuilder()
-                .WithUrl("http://192.168.137.1:5082/Hubs/fileUploadHub") // Ensure this matches your actual hub URL
+            var hubConnection = new HubConnectionBuilder()
+                .WithUrl("http://192.168.137.1:5082/Hubs/fileUploadHub")
                 .Build();
 
             // Register a method to receive messages from the server
             hubConnection.On<string>("ReceiveMessage", async (message) =>
             {
-                // Check if the message indicates a successful file upload for this session
+                System.Diagnostics.Debug.WriteLine($"Received SignalR message: {message}");
                 if (message.Contains($"File uploaded successfully for session {sessionId}"))
                 {
-                    // Fetch file details after receiving the SignalR notification
-                    await FetchFileDetails();
+                    // Run the file fetching in the background without blocking the UI thread
+                    await Task.Run(async () =>
+                    {
+                        try
+                        {
+                            await FetchFileDetails();
+                        }
+                        catch (Exception ex)
+                        {
+                            System.Diagnostics.Debug.WriteLine($"Error fetching file details: {ex.Message}");
+                        }
+                    });
                 }
             });
 
@@ -58,52 +96,70 @@ namespace kiosk_snapprint
             try
             {
                 await hubConnection.StartAsync();
-                Console.WriteLine("Connected to SignalR hub.");
+                System.Diagnostics.Debug.WriteLine("Connected to SignalR hub.");
             }
             catch (Exception ex)
             {
-                ShowError($"Error connecting to SignalR hub: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Error connecting to SignalR hub: {ex.Message}");
             }
         }
+
+
 
         private async Task FetchFileDetails()
         {
             try
             {
-                using (HttpClient client = new HttpClient())
+                // Run the HTTP request on a background thread to avoid blocking the UI thread
+                var fileDetails = await Task.Run(async () =>
                 {
-                    string apiUrl = $"http://192.168.137.1:5082/api/upload/getfileinfo?sessionId={sessionId}";
-
-                    // Send request to retrieve file details
-                    var response = await client.GetAsync(apiUrl);
-
-                    if (response.IsSuccessStatusCode)
+                    using (HttpClient client = new HttpClient())
                     {
-                        // Deserialize file details
-                        var fileDetails = await response.Content.ReadFromJsonAsync<FileDetails>();
+                        string apiUrl = $"http://192.168.137.1:5082/api/upload/getfileinfo?sessionId={sessionId}";
 
-                        // Verify the session ID to ensure the correct file
-                        if (fileDetails != null && fileDetails.SessionId == sessionId)
+                        // Send request to retrieve file details
+                        var response = await client.GetAsync(apiUrl);
+
+                        if (response.IsSuccessStatusCode)
                         {
-                            // Navigate to the PDF display with file details
-                            NavigateToPDFDisplay(fileDetails);
+                            // Deserialize file details
+                            return await response.Content.ReadFromJsonAsync<FileDetails>();
                         }
                         else
                         {
-                            ShowError("Session ID mismatch.");
+                            ShowError("Unable to retrieve file details.");
+                            return null;
                         }
                     }
-                    else
+                });
+
+                // After getting file details, we need to interact with UI components, which must be done on the UI thread
+                if (fileDetails != null && fileDetails.SessionId == sessionId)
+                {
+                    // Ensure UI updates are done on the UI thread
+                    Application.Current.Dispatcher.Invoke(() =>
                     {
-                        ShowError("Unable to retrieve file details.");
-                    }
+                        // Display file details in the console
+                        System.Diagnostics.Debug.WriteLine($"Session ID: {fileDetails.SessionId}");
+                        System.Diagnostics.Debug.WriteLine($"File Path: {fileDetails.FilePath}");
+                        System.Diagnostics.Debug.WriteLine($"File Name: {fileDetails.FileName}");
+                        System.Diagnostics.Debug.WriteLine($"Page Size: {fileDetails.PageSize}");
+                        System.Diagnostics.Debug.WriteLine($"Page Count: {fileDetails.PageCount}");
+                        NavigateToPDFDisplay(fileDetails);
+                    });
+                }
+                else
+                {
+                    ShowError("Session ID mismatch.");
                 }
             }
             catch (Exception ex)
             {
                 ShowError("Error fetching file details: " + ex.Message);
+                Console.WriteLine($"Error fetching file details: {ex.Message}");
             }
         }
+
 
 
 
@@ -135,10 +191,14 @@ namespace kiosk_snapprint
         {
             var pdfDisplay = new PDFDisplay(fileDetails.FilePath, fileDetails.FileName, fileDetails.PageSize, fileDetails.PageCount);
 
-            // Retrieve the current main window instance and set the content
+            // Retrieve the current main window instance and set the content on the UI thread
             if (Application.Current.MainWindow is MainWindow mainWindow)
             {
-                mainWindow.MainContent.Content = pdfDisplay; // Update MainContent in the MainWindow instance
+                // Ensure this happens on the UI thread
+                mainWindow.Dispatcher.Invoke(() =>
+                {
+                    mainWindow.MainContent.Content = pdfDisplay; // Update MainContent in the MainWindow instance
+                });
             }
             else
             {
@@ -146,27 +206,23 @@ namespace kiosk_snapprint
             }
         }
 
+
         private void ShowError(string message)
         {
             MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        private async void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        public class FileDetails
         {
-            // Clean up the SignalR connection when the control is unloaded
-            if (hubConnection != null)
-            {
-                await hubConnection.DisposeAsync();
-            }
+            public string SessionId { get; set; }
+            public string FilePath { get; set; }
+            public string FileName { get; set; }
+            public string PageSize { get; set; }
+            public int PageCount { get; set; }
         }
+
+
     }
 
-    public class FileDetails
-    {
-        public string SessionId { get; set; }
-        public string FilePath { get; set; }
-        public string FileName { get; set; }
-        public string PageSize { get; set; }
-        public int PageCount { get; set; }
-    }
+   
 }
