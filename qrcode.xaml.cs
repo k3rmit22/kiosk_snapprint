@@ -196,24 +196,48 @@ namespace kiosk_snapprint
             }
         }
 
-        private void NavigateToPDFDisplay(FileDetails fileDetails)
+        //private void NavigateToPDFDisplay(FileDetails fileDetails)
+        //{
+        //    var pdfDisplay = new PDFDisplay(fileDetails.FilePath, fileDetails.FileName, fileDetails.PageSize, fileDetails.PageCount);
+
+        //    // Retrieve the current main window instance and set the content on the UI thread
+        //    if (Application.Current.MainWindow is MainWindow mainWindow)
+        //    {
+        //        // Ensure this happens on the UI thread
+        //        mainWindow.Dispatcher.Invoke(() =>
+        //        {
+        //            mainWindow.MainContent.Content = pdfDisplay; // Update MainContent in the MainWindow instance
+        //        });
+        //    }
+        //    else
+        //    {
+        //        ShowError("Main window instance not found.");
+        //    }
+        //}
+        private async void NavigateToPDFDisplay(FileDetails fileDetails)
         {
+            // Create an instance of PDFDisplay and pass the file details
             var pdfDisplay = new PDFDisplay(fileDetails.FilePath, fileDetails.FileName, fileDetails.PageSize, fileDetails.PageCount);
 
             // Retrieve the current main window instance and set the content on the UI thread
             if (Application.Current.MainWindow is MainWindow mainWindow)
             {
                 // Ensure this happens on the UI thread
-                mainWindow.Dispatcher.Invoke(() =>
+                await mainWindow.Dispatcher.InvokeAsync(() =>
                 {
                     mainWindow.MainContent.Content = pdfDisplay; // Update MainContent in the MainWindow instance
                 });
+
+                // Once the content is set, load the PDF asynchronously
+                await pdfDisplay.LoadPdfAsync(fileDetails.FilePath);
             }
             else
             {
                 ShowError("Main window instance not found.");
             }
         }
+
+
 
 
         private void ShowError(string message)
