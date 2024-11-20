@@ -26,7 +26,8 @@ namespace kiosk_snapprint
     /// </summary>
     public partial class PDFDisplay : UserControl
     {
-       
+        
+
         public PDFDisplay(string filePath, string fileName, string pageSize, int pageCount)
         {
             InitializeComponent();
