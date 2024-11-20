@@ -6,13 +6,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:kiosk_snapprint"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+            d:DesignHeight="1080" d:DesignWidth="1900">
 
     <Grid Background="White">
-        
-        <syncfusion:PdfViewerControl x:Name="pdfViewer" Margin="105,25,335,35" />
+        <Border Margin="75,40,85,75" BorderBrush="Black" BorderThickness="5,5,5,5" CornerRadius="5,5,5,5" >
+            <syncfusion:PdfViewerControl x:Name="pdfViewer" Margin="40,35,870,40" />
 
-       
-        
+        </Border>
+
     </Grid>
 </UserControl>

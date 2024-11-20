@@ -8,82 +8,86 @@
  Title="MainWindow" 
  ResizeMode="NoResize"
  Topmost="True"
- Height="450" 
- Width="800" WindowStartupLocation="CenterScreen">
-    <Viewbox Margin="0,20,33,0">
-        <Grid>
-            
-            <!-- ContentControl that will hold dynamic content -->
-            <ContentControl x:Name="MainContent">
-                <Grid Width="869">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="0*"/>
-                        <ColumnDefinition Width="*" />
-                        <!-- Use * to make it flexible -->
-                    </Grid.ColumnDefinitions>
+ Height="1080" 
+ Width="1900" WindowStartupLocation="CenterScreen" WindowStyle="None" WindowState="Maximized">
 
-                    <!-- First image -->
-                    <Image Margin="343,30,350,304" Grid.Column="1" />
+    <Grid>
 
-                    <!-- Second image -->
-                    <Image Source="/wow.png" Margin="325,7,334,297" Grid.Column="1" />
+        <!-- ContentControl that will hold dynamic content -->
+        <ContentControl x:Name="MainContent">
+            <Grid Margin="15,60,20,50">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="109*"/>
+                    <RowDefinition Height="107*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0*"/>
+                    <ColumnDefinition Width="*" />
+                    <!-- Use * to make it flexible -->
+                </Grid.ColumnDefinitions>
 
-                    <!-- Label -->
-                    <Label Content="HOW WOULD YOU LIKE TO PRINT?" 
-                        HorizontalAlignment="Center" 
+                <!-- First image -->
+                <Image Margin="343,30,350,304" Grid.Column="1" Grid.RowSpan="2" />
+
+                <!-- Second image -->
+                <Image Source="/wow.png" Margin="488,40,473,56" Grid.Column="1" />
+
+                <!-- Label -->
+                <Label Content="HOW WOULD YOU LIKE TO PRINT?" 
+                        HorizontalAlignment="Left" 
                         VerticalAlignment="Top" 
                         FontWeight="Bold" 
-                        FontSize="24" 
+                        FontSize="70" 
                         Grid.Column="1" 
-                        Margin="0,240,0,0" 
-                        Width="404" />
+                        Margin="385,430,0,0" 
+                        Width="1174" Height="135" Grid.RowSpan="2" />
 
-                    <!-- Button 1: Scan QR Code -->
-                    <Button HorizontalAlignment="Left" 
-                         Height="115" 
-                         Margin="53,323,0,0" 
+                <!-- Button 1: Scan QR Code -->
+                <Button HorizontalAlignment="Left" 
+                         Height="242" 
+                         Margin="285,209,0,0" 
                          VerticalAlignment="Top" 
-                         Width="178" 
+                         Width="260" 
                          Background="White" 
                          Grid.Column="1"
-                         Click="GoToQRCodePage_Click">
+                         Click="GoToQRCodePage_Click" Grid.Row="1" BorderBrush="Black" BorderThickness="5,5,5,5">
 
-                        <StackPanel Orientation="Vertical">
-                            <Image Source="/scanner.png" Height="86" Width="86" />
-                            <TextBlock Text="Scan QR Code" HorizontalAlignment="Center" />
-                        </StackPanel>
-                    </Button>
+                    <StackPanel Orientation="Vertical" Height="209">
+                        <Image Source="/scanner.png" Height="178" Width="200" Stretch="UniformToFill" />
+                        <TextBlock Text="Scan QR Code" HorizontalAlignment="Center" FontWeight="Bold" FontSize="20" />
+                    </StackPanel>
+                </Button>
 
-                    <!-- Button 2: Flash Drive -->
-                    <Button HorizontalAlignment="Left" 
-                         Height="115" 
-                         Margin="351,323,0,0" 
+                <!-- Button 2: Flash Drive -->
+                <Button HorizontalAlignment="Left" 
+                         Height="240" 
+                         Margin="860,211,0,0" 
                          VerticalAlignment="Top" 
-                         Width="180" 
+                         Width="265" 
                          Background="White" 
-                         Grid.Column="1" Click="Button_Click">
-                        <StackPanel Orientation="Vertical">
-                            <Image Source="/flashdrive.png" Height="81" Width="161" />
-                            <TextBlock Text="Flash Drive" HorizontalAlignment="Center" />
-                        </StackPanel>
-                    </Button>
+                         Grid.Column="1" Click="Button_Click" Grid.Row="1" BorderThickness="5,5,5,5" BorderBrush="Black">
+                    <StackPanel Orientation="Vertical">
+                        <Image Source="/flashdrive.png" Height="184" Width="200" Stretch="UniformToFill" />
+                        <TextBlock Text="Flash Drive" HorizontalAlignment="Center" FontWeight="Bold" FontSize="20" />
+                    </StackPanel>
+                </Button>
 
-                    <!-- Button 3: Enter Unique Code -->
-                    <Button HorizontalAlignment="Left" 
-                         Height="115" 
-                         Margin="657,323,0,0" 
+                <!-- Button 3: Enter Unique Code -->
+                <Button HorizontalAlignment="Left" 
+                         Height="240" 
+                         Margin="1465,211,0,0" 
                          VerticalAlignment="Top" 
-                         Width="163" 
+                         Width="265" 
                          Background="White" 
-                         Grid.Column="1" Click="Button_Click_1">
-                        <StackPanel Orientation="Vertical">
-                            <Image Source="/passcode.png" Height="81" Width="152" />
-                            <TextBlock Text="Enter Unique Code" HorizontalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
+                         Grid.Column="1" Click="Button_Click_1" Grid.Row="1" BorderBrush="Black" BorderThickness="5,5,5,5">
+                    <StackPanel Orientation="Vertical">
+                        <Image Source="/passcode.png" Height="178" Width="200" />
+                        <TextBlock Text="Enter Unique Code" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" />
+                    </StackPanel>
+                </Button>
 
-                </Grid>
-            </ContentControl>
-        </Grid>
-    </Viewbox>
+            </Grid>
+        </ContentControl>
+    </Grid>
+
 </Window>

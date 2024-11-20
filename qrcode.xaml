@@ -5,9 +5,92 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:kiosk_snapprint"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="1080" d:DesignWidth="1900">
+    <UserControl.Resources>
+        <Style x:Key="FocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="2" StrokeDashArray="1 2" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" SnapsToDevicePixels="true" StrokeThickness="1"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <SolidColorBrush x:Key="Button.Static.Background" Color="#FFDDDDDD"/>
+        <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FFBEE6FD"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Border" Color="#FF3C7FB1"/>
+        <SolidColorBrush x:Key="Button.Pressed.Background" Color="#FFC4E5F6"/>
+        <SolidColorBrush x:Key="Button.Pressed.Border" Color="#FF2C628B"/>
+        <SolidColorBrush x:Key="Button.Disabled.Background" Color="#FFF4F4F4"/>
+        <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FFADB2B5"/>
+        <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383"/>
+        <Style x:Key="RoundedButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Background" Value="{StaticResource Button.Static.Background}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="border" CornerRadius="5" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="true">
+                            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsDefaulted" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="#FFCFCFCF"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="#FF5B5858"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="#FFCFCFCF"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="#FF5B5858"/>
+                                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="white"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
+                                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
     <Grid Background="White">
-        <Image x:Name="QrCodeImageControl" Width="200" Height="200" Margin="275,120,325,130"/>
-        <TextBlock x:Name="SessionIdTextBlock" FontSize="14" Margin="11,15,525,270" />
+
+        <Button Style="{DynamicResource RoundedButtonStyle}" Content="Back"  HorizontalAlignment="Left" VerticalAlignment="Top" 
+                 Width="200" Height="115" Click="BackButton_Click" Margin="185,70,0,0" FontWeight="Bold" FontSize="40" BorderBrush="Black" Background="White" Foreground="#FF080808" BorderThickness="5,5,5,5"
+                />
+
+        <Border x:Name="border_qr_url" Margin="1045,220,160,115"  BorderBrush="Black" BorderThickness="5,5,5,5" CornerRadius="5,5,5,5">
+            <Image x:Name="QrCodeImageControl" Margin="46,36,40,36"/>
+        </Border>
+        <Label Content="Step 2: Scan to Upload Pdf file." Margin="1250,899,350,140" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="20" FontWeight="Bold"/>
+
+        <TextBlock x:Name="SessionIdTextBlock" FontSize="20" 
+                   Margin="1265,170,310,825" TextAlignment="Center" FontWeight="Bold" />
+
+        <Label Content="SNAPPRINT" HorizontalAlignment="Left" HorizontalContentAlignment="Center"
+               Margin="740,35,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="72" Height="115" Width="460"/>
+
+
+
+        <Border x:Name="border_qr_nek" Margin="180,220,1021,115" BorderBrush="Black" BorderThickness="5,5,5,5" CornerRadius="5,5,5,5">
+
+            <Image x:Name="QrCodeforhotspot" Margin="40,36,46,36"/>
+        </Border>
+        <Label Content="Step 1: Scan to Connect to our Hotspot" Margin="205,894,1085,145" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="20" FontWeight="Bold"/>
+
+
+
     </Grid>
+
 </UserControl>

@@ -23,14 +23,25 @@ namespace kiosk_snapprint
         {
             InitializeComponent();
             this.sessionId = sessionId;
-
+            DisplayHotspotQRCode();
             DisplayQRCode();
             SessionIdTextBlock.Text = $"Session ID: {sessionId}";
 
             SetupSignalR();    // Initialize SignalR connection
         }
+
+        private void DisplayHotspotQRCode()
+        {
+            string hotspotDetails = "WIFI:S:SnapPrint_Hotspot;T:WPA;P:password123;;";
+            Bitmap qrCodeImage = GenerateQRCode(hotspotDetails);
+            QrCodeforhotspot.Source = BitmapToImageSource(qrCodeImage);
+        }
+
+
+
         private void DisplayQRCode()
         {
+           
             string url = $"http://192.168.137.1:5082/Upload/Index?sessionId={sessionId}";
             Console.WriteLine($"Generated URL: {url}");
             Bitmap qrCodeImage = GenerateQRCode(url);
@@ -162,14 +173,12 @@ namespace kiosk_snapprint
 
 
 
-
-
         private Bitmap GenerateQRCode(string url)
         {
             QRCodeGenerator qrGenerator = new QRCodeGenerator();
             QRCodeData qrCodeData = qrGenerator.CreateQrCode(url, QRCodeGenerator.ECCLevel.Q);
             QRCode qrCode = new QRCode(qrCodeData);
-            return qrCode.GetGraphic(20); // Size customization
+            return qrCode.GetGraphic(10); // Size customization
         }
 
         private ImageSource BitmapToImageSource(Bitmap bitmap)
@@ -221,7 +230,14 @@ namespace kiosk_snapprint
             public int PageCount { get; set; }
         }
 
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Get reference to MainWindow
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
 
+            // Navigate to the default UserControl (e.g., HomeUserControl)
+            mainWindow.MainContent.Content = new HomeUserControl(); // Replace with your actual default UserControl
+        }
     }
 
    
