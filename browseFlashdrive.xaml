@@ -15,19 +15,21 @@
                   MouseDoubleClick="pdfFileListView_MouseDoubleClick">
             <ListView.View>
                 <GridView>
-                    <!-- Combined Column for PDF Icon and File Name -->
-                    <GridViewColumn Width="400">
+                    <!-- Column for PDF Icon -->
+                    <GridViewColumn Width="50">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <!-- Bigger PDF Icon -->
-                                    <Image Source="C:\Users\rmbar\source\repos\kiosk_snapprint\pdficon.png" Width="48" Height="48" Margin="5"/>
-                                    <!-- File Name -->
-                                    <TextBlock Text="{Binding FileName}" VerticalAlignment="Center" Margin="5"/>
-                                </StackPanel>
+                                <!-- Display PDF Icon -->
+                                <Image Source="C:\Users\rmbar\source\repos\kiosk_snapprint\pdficon.png" Width="32" Height="32" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
+
+                    <!-- Column for File Name -->
+                    <GridViewColumn Header="File Name" DisplayMemberBinding="{Binding FileName}" Width="300"/>
+
+                    <!-- Column for File Path -->
+                    <GridViewColumn Header="File Path" DisplayMemberBinding="{Binding FilePath}" Width="400"/>
                 </GridView>
             </ListView.View>
         </ListView>
