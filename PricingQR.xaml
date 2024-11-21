@@ -1,0 +1,54 @@
+﻿<UserControl x:Class="kiosk_snapprint.PricingQR"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:kiosk_snapprint"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid Background="White">
+
+        <!-- Border to divide the sections -->
+        <Border BorderBrush="Black" BorderThickness="5" CornerRadius="10" Margin="10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <!-- Left side (PDF icon and filename) -->
+                    <ColumnDefinition Width="*"/>
+                    <!-- Right side (Summary) -->
+                </Grid.ColumnDefinitions>
+
+                <!-- Left section with PDF icon and filename -->
+                <Grid Grid.Column="0" Margin="5,5,375,15" Grid.ColumnSpan="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="70"/>
+                        <RowDefinition Height="85"/>
+                        <RowDefinition Height="228.265"/>
+                    </Grid.RowDefinitions>
+                    <Image Source="/pdficon.png" Width="175" HorizontalAlignment="Left" Margin="190,25,0,102" Grid.Row="1" Grid.RowSpan="2"/>
+                    <TextBlock  x:Name="FileNameTextBlock" Text="file name.pdf" FontSize="22" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="207,146,0,0" Grid.Row="2"/>
+                </Grid>
+
+                <!-- Right section with the Summary information -->
+                <Grid Grid.Column="1" Margin="395,10,80,10">
+                    <TextBlock Text="Summary" FontSize="30" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,85,0,0"/>
+
+                    <!-- Color Section -->
+                    <TextBlock x:Name="ColorModeTextBlock" Text="Color: Colored" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,149,0,0" FontWeight="Bold"/>
+
+                    <!-- Page to Print Section -->
+                    <TextBlock x:Name="PageCountTextBlock" Text="Page to Print: Page 1" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,179,0,0" FontWeight="Bold"/>
+
+                    <!-- Copies Section -->
+                    <TextBlock x:Name="CopyCountTextBlock" Text="Copies: 1" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="117,209,0,0" FontWeight="Bold"/>
+
+                    <!-- Total Price Section -->
+                    <TextBlock x:Name="PriceTextBlock" Text="Total: 10" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="121,249,0,0" FontWeight="Bold"/>
+                    <TextBlock x:Name="T" Text="Inserted amount: 0.00" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="74,289,0,0" FontWeight="Bold"/>
+
+                    <!-- Inserted Amount Section -->
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

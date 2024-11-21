@@ -27,6 +27,8 @@ namespace kiosk_snapprint
             
         }
 
+       
+
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             _hookID = SetHook(HookCallback); // Set up the hook to disable hotkeys

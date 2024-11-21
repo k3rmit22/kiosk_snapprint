@@ -74,5 +74,12 @@ namespace kiosk_snapprint
                 MessageBox.Show($"Error navigating to browseFlashdrive: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+
+            mainWindow.MainContent.Content = new HomeUserControl();
+        }
     }
 }

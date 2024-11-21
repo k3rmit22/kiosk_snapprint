@@ -5,10 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:kiosk_snapprint"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="1080" d:DesignWidth="1900">
     <Grid Background="White">
-        <Image Height="100" Margin="340,330,340,20" Width="120" Source="/flashdrive.png"/>
-        <Label Content="PLEASE INSERT YOUR FLASHDRIVE." HorizontalAlignment="Center" Margin="0,264,0,0" VerticalAlignment="Top" Width="210"/>
+        <Image Margin="785,645,770,200" Source="/flashdrive.png"/>
+        <Label Content="PLEASE INSERT YOUR FLASHDRIVE." HorizontalAlignment="Left" Margin="620,472,0,0" VerticalAlignment="Top" Width="685" FontSize="40" FontWeight="Bold"/>
+        <Button  Content="Back"  HorizontalAlignment="Left" VerticalAlignment="Top" 
+            Width="200" Height="115" Click="BackButton_Click" Margin="185,70,0,0" FontWeight="Bold" FontSize="40" BorderBrush="Black" Background="White" Foreground="#FF080808" BorderThickness="5,5,5,5"
+                />
 
     </Grid>
 </UserControl>

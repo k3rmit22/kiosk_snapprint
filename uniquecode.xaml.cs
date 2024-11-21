@@ -24,5 +24,14 @@ namespace kiosk_snapprint
         {
             InitializeComponent();
         }
+
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+           
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+
+            
+            mainWindow.MainContent.Content = new HomeUserControl(); 
+        }
     }
 }
