@@ -15,7 +15,7 @@ using System.Windows.Shapes;
 
 namespace kiosk_snapprint
 {
-    public partial class proceedPrinting : UserControl
+    public partial class proceedPrinting : Window
     {
         private string FilePath { get; set; }
         private string FileName { get; set; }
@@ -34,8 +34,8 @@ namespace kiosk_snapprint
 
         private void DisplayFileDetails()
         {
-            // Display both the file name and the file path
-            selectedFilePathTextBlock.Text = $" {FileName}";
+            // Display the file name
+            selectedFilePathTextBlock.Text = $"{FileName}";
         }
 
         // Confirm button click handler
@@ -43,13 +43,16 @@ namespace kiosk_snapprint
         {
             MessageBox.Show("Proceeding to print the file.");
             // Insert printing logic here
+            this.DialogResult = true; // Close the modal with a positive result
+            this.Close();
         }
 
         // Cancel button click handler
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Printing canceled.");
-            // Insert logic to navigate back or close the user control
+            this.DialogResult = false; // Close the modal with a negative result
+            this.Close();
         }
     }
 }
