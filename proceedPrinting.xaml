@@ -14,21 +14,19 @@
             BorderThickness="2"
             Padding="10">
         <Grid Margin="0,-2,0,2">
-            <!-- Label asking for confirmation (Larger Font Size) -->
+            <!-- Label asking for confirmation -->
             <TextBlock Text="Proceed to Printing?"
                        FontSize="36"
                        FontWeight="Bold"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Top"
                        Margin="0,10,0,10" />
-
-            <!-- Display Selected File Path (Centered and Smaller Font Size) -->
             <TextBlock x:Name="selectedFilePathTextBlock"
-                       FontSize="24"
+                       FontSize="36"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        Margin="0,10,0,10"
-                       TextWrapping="Wrap" FontWeight="Bold" />
+                       TextWrapping="Wrap" FontWeight="Bold" FontFamily="Franklin Gothic Demi" FontStyle="Italic" />
 
             <!-- Buttons for Confirming or Canceling -->
             <StackPanel Orientation="Horizontal"
@@ -40,25 +38,23 @@
                         Width="229"
                         Height="114"
                         Margin="5"
-                        FontSize="14"
+                        FontSize="22"
                         VerticalAlignment="Center"
                         Click="ConfirmButton_Click"
                         Background="#FFEFF582"
                         BorderBrush="#FFD4D4D4"
-                        BorderThickness="1"
-                        />
+                        BorderThickness="1" FontWeight="Bold" FontFamily="Franklin Gothic Demi Cond" />
                 <Button x:Name="CancelButton"
                         Content="Cancel"
                         Width="220"
                         Height="114"
                         Margin="5"
-                        FontSize="14"
+                        FontSize="22"
                         VerticalAlignment="Center"
                         Click="CancelButton_Click"
                         Background="#FFFB6A6A"
                         BorderBrush="#FFD4D4D4"
-                        BorderThickness="1"
-                        />
+                        BorderThickness="1" FontWeight="Bold" FontFamily="Franklin Gothic Demi" />
             </StackPanel>
         </Grid>
     </Border>

@@ -41,17 +41,33 @@ namespace kiosk_snapprint
         // Confirm button click handler
         private void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Proceeding to print the file.");
-            // Insert printing logic here
-            this.DialogResult = true; // Close the modal with a positive result
-            this.Close();
+           
+
+            // Assuming the main window contains a placeholder (like a Grid or a StackPanel) to display the PDFControl
+            // Get the main window instance
+            var mainWindow = Application.Current.MainWindow as MainWindow;
+
+            if (mainWindow != null)
+            {
+                // Create an instance of the PDFDisplay UserControl and pass the file path
+                var pdfDisplay = new PDFDisplay(FilePath, FileName, "A4", 5);  // Pass file details and sample page count
+                pdfDisplay.LoadPdfAsync(FilePath);  // Load the PDF into the viewer
+
+                // Assuming there is a container in the main window (e.g., a Grid) named 'MainContent'
+                mainWindow.MainContent.Content = pdfDisplay;  // Add the PDFDisplay control to the main window
+
+           
+                this.Close();
+            }
         }
+
+
+
 
         // Cancel button click handler
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Printing canceled.");
-            this.DialogResult = false; // Close the modal with a negative result
+           
             this.Close();
         }
     }
