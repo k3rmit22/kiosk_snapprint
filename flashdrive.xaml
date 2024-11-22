@@ -7,10 +7,10 @@
              mc:Ignorable="d" 
              d:DesignHeight="1080" d:DesignWidth="1900">
     <Grid Background="White">
-        <Image Margin="785,645,770,200" Source="/flashdrive.png"/>
-        <Label Content="PLEASE INSERT YOUR FLASHDRIVE." HorizontalAlignment="Left" Margin="620,472,0,0" VerticalAlignment="Top" Width="685" FontSize="40" FontWeight="Bold"/>
+        <Image Margin="778,697,778,148" Source="/flashdrive.png"/>
+        <Label Content="PLEASE INSERT YOUR FLASHDRIVE." HorizontalAlignment="Left" Margin="557,477,0,0" VerticalAlignment="Top" Width="778" FontSize="40" FontWeight="Bold"/>
         <Button  Content="Back"  HorizontalAlignment="Left" VerticalAlignment="Top" 
-            Width="200" Height="115" Click="BackButton_Click" Margin="185,70,0,0" FontWeight="Bold" FontSize="40" BorderBrush="Black" Background="White" Foreground="#FF080808" BorderThickness="5,5,5,5"
+            Width="200" Height="115" Click="BackButton_Click" Margin="119,122,0,0" FontWeight="Bold" FontSize="40" BorderBrush="Black" Background="White" Foreground="#FF080808" BorderThickness="5,5,5,5"
                 />
 
     </Grid>

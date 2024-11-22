@@ -4,12 +4,10 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Collections.ObjectModel;
+using System.Windows.Navigation;
 
 namespace kiosk_snapprint
 {
-    /// <summary>
-    /// Interaction logic for browseFlashdrive.xaml
-    /// </summary>
     public partial class browseFlashdrive : UserControl
     {
         // ObservableCollection to bind the ListView
@@ -39,7 +37,7 @@ namespace kiosk_snapprint
                 {
                     string flashDrivePath = flashDrive.RootDirectory.FullName;
 
-                    // Get all PDF files in the root of the flash drive (you can expand this to subdirectories if needed)
+                    // Get all PDF files in the root of the flash drive
                     var pdfFiles = Directory.GetFiles(flashDrivePath, "*.pdf", SearchOption.TopDirectoryOnly)
                                              .Select(filePath => new FileItem
                                              {
@@ -67,17 +65,26 @@ namespace kiosk_snapprint
             }
         }
 
-        // Handle double-click event to open the selected PDF file
-        private void pdfFileListView_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+      
+        // Handle single click (selection) to load proceedPrinting UserControl
+        private void pdfFileListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var selectedFile = pdfFileListView.SelectedItem as FileItem;
             if (selectedFile != null)
             {
-                // You can open the selected file or perform other actions
-                MessageBox.Show($"Selected PDF: {selectedFile.FileName}\nPath: {selectedFile.FilePath}");
-                // Open the PDF or do further processing as required
+                // Create a new instance of proceedPrinting UserControl and pass the file path to it
+                var proceedPrintingControl = new proceedPrinting(selectedFile.FilePath);
+
+                // Assuming you have a ContentControl in the parent (such as MainWindow or another container)
+                var parentControl = this.Parent as ContentControl;
+                if (parentControl != null)
+                {
+                    // Set the new UserControl as the content of the parent control
+                    parentControl.Content = proceedPrintingControl;
+                }
             }
         }
+
     }
 
     // Helper class to hold file information

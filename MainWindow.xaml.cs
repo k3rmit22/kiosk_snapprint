@@ -24,6 +24,7 @@ namespace kiosk_snapprint
             InitializeComponent();
             Loaded += MainWindow_Loaded;
             MainContent.Content = new HomeUserControl();
+
             
         }
 
