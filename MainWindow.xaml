@@ -6,12 +6,13 @@
  xmlns:local="clr-namespace:kiosk_snapprint"
  mc:Ignorable="d"
  Title="MainWindow" 
- ResizeMode="NoResize"
+ ResizeMode="CanResize"
  Topmost="True"
  Height="1080" 
- Width="1900" WindowStartupLocation="CenterScreen" WindowStyle="None" WindowState="Maximized">
+ Width="1900" WindowStartupLocation="CenterScreen" WindowStyle="SingleBorderWindow" WindowState="Normal">
 
     <Grid>
+        <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" />
 
         <!-- ContentControl that will hold dynamic content -->
         <ContentControl x:Name="MainContent">

@@ -23,20 +23,14 @@ namespace kiosk_snapprint
         {
             InitializeComponent();
             this.sessionId = sessionId;
-            DisplayHotspotQRCode();
+            
             DisplayQRCode();
             SessionIdTextBlock.Text = $"Session ID: {sessionId}";
 
             SetupSignalR();    // Initialize SignalR connection
         }
 
-        private void DisplayHotspotQRCode()
-        {
-            string hotspotDetails = "WIFI:S:SnapPrint_Hotspot;T:WPA;P:password123;;";
-            Bitmap qrCodeImage = GenerateQRCode(hotspotDetails);
-            QrCodeforhotspot.Source = BitmapToImageSource(qrCodeImage);
-        }
-
+        
 
 
         private void DisplayQRCode()
@@ -260,7 +254,7 @@ namespace kiosk_snapprint
             var mainWindow = (MainWindow)Application.Current.MainWindow;
 
             // Navigate to the default UserControl (e.g., HomeUserControl)
-            mainWindow.MainContent.Content = new HomeUserControl(); // Replace with your actual default UserControl
+            mainWindow.MainContent.Content = new wificonnect(); // Replace with your actual default UserControl
         }
     }
 

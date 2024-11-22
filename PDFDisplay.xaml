@@ -6,7 +6,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:kiosk_snapprint"
              mc:Ignorable="d" 
-            d:DesignHeight="1080" d:DesignWidth="1900">
+            d:DesignHeight="450" d:DesignWidth="800">
     <Grid Background="White">
         <!-- Define Columns -->
         <Grid.ColumnDefinitions>
@@ -22,24 +22,24 @@
             <syncfusion:PdfViewerControl x:Name="pdfViewer" 
                        HorizontalAlignment="Center" 
                        VerticalAlignment="Center" 
-                       FontSize="12" />
+                       FontSize="12" Height="430" Width="470" />
         </Border>
 
         <!-- Preferences Panel -->
-        <StackPanel Grid.Column="1" Margin="105,160,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Height="610" Width="490">
+        <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Height="388" Width="310">
             <!-- Preferences Header -->
             <TextBlock Text="Preferences" 
-                       FontSize="50" 
+                       FontSize="30" 
                        FontWeight="Bold" 
                        HorizontalAlignment="Center" 
                        Margin="0,0,0,40" />
 
             <!-- Select Page to Print -->
             <TextBlock Text="Select a page to print?" 
-                       FontSize="24"  HorizontalAlignment="Center" 
+                       FontSize="20"  HorizontalAlignment="Center" 
                        Margin="0,0,0,20" FontWeight="Bold" />
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,40">
-                <ComboBox x:Name="PageSelectionComboBox" Width="300" Height="42" 
+                <ComboBox x:Name="PageSelectionComboBox" Width="205" Height="42" 
               SelectionChanged="PageSelectionComboBox_SelectionChanged" FontSize="24">
                     <!-- ComboBox items will be populated dynamically in the code-behind -->
                 </ComboBox>
@@ -47,20 +47,20 @@
 
             <!-- Number of Copies -->
             <TextBlock Text="How Many copies to print?" 
-                       FontSize="24"  HorizontalAlignment="Center" 
+                       FontSize="20"  HorizontalAlignment="Center" 
                        Margin="0,0,0,20" FontWeight="Bold" />
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button  x:Name="DecreaseButton" Content="-" Width="60" Height="60" FontSize="30" Margin="10" FontWeight="Bold"  Click="DecreaseCopyCount_Click" />
+                <Button  x:Name="DecreaseButton" Content="-" Width="54" Height="45" FontSize="30"  Margin="10" FontWeight="Bold"  Click="DecreaseCopyCount_Click" />
                 <TextBlock x:Name="CopyCountTextBlock" Text="1" 
                            Width="60" 
                            Height="49" 
                            TextAlignment="Center" 
                            VerticalAlignment="Center" 
                            FontSize="36" FontWeight="Bold" />
-                <Button x:Name="IncreaseButton" Content="+" Width="60" Height="60" FontSize="30" Margin="10" FontWeight="Bold" Click="IncreaseCopyCount_Click"/>
+                <Button x:Name="IncreaseButton" Content="+" Width="50" Height="44" FontSize="30" Margin="10" FontWeight="Bold" Click="IncreaseCopyCount_Click"/>
             </StackPanel>
             <StackPanel Height="100">
-                <Button x:Name="ProceedButton" Content="Proceed to payment?" Width="300" Height="60" FontSize="24" Margin="10" FontWeight="Bold" Click="PROCEED_Click" ></Button>
+                <Button x:Name="ProceedButton" Content="" Width="187" Height="41" FontSize="20" Margin="10" FontWeight="Bold" Click="PROCEED_Click" ></Button>
             </StackPanel>
 
         </StackPanel>

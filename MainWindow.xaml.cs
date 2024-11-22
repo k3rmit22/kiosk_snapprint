@@ -24,8 +24,8 @@ namespace kiosk_snapprint
             InitializeComponent();
             Loaded += MainWindow_Loaded;
             MainContent.Content = new HomeUserControl();
+       
 
-            
         }
 
        
@@ -97,22 +97,26 @@ namespace kiosk_snapprint
         private void GoToQRCodePage_Click(object sender, RoutedEventArgs e)
         {
             // Generate a session ID when the button is clicked
-            string sessionId = GenerateSessionId();
+            //string sessionId = GenerateSessionId();
 
-            // Create an instance of the qrcode UserControl and pass the session ID
-            qrcode qrPage = new qrcode(sessionId);
+            //// Create an instance of the qrcode UserControl and pass the session ID
+            //qrcode qrPage = new qrcode(sessionId);
 
-            // Set the content to display the QR page (assuming a ContentControl named MainContent for navigation)
-            MainContent.Content = qrPage;
+            //// Set the content to display the QR page (assuming a ContentControl named MainContent for navigation)
+            //MainContent.Content = qrPage;
+
+            wificonnect connect2Wifi = new wificonnect();
+            MainContent.Content = connect2Wifi;
+
         }
 
-        private string GenerateSessionId(int length = 6)
-        {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            var random = new Random();
-            return new string(Enumerable.Repeat(chars, length)
-                .Select(s => s[random.Next(s.Length)]).ToArray());
-        }
+        //private string GenerateSessionId(int length = 6)
+        //{
+        //    const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        //    var random = new Random();
+        //    return new string(Enumerable.Repeat(chars, length)
+        //        .Select(s => s[random.Next(s.Length)]).ToArray());
+        //}
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
