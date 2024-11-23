@@ -9,22 +9,32 @@ namespace kiosk_snapprint
     /// </summary>
     public partial class PricingQR : UserControl
     {
-       
-
-        public PricingQR( int copyCount, int selectedPages, int totalPages, string filePath, string fileName)
+        public string FileName { get; }
+        public string FilePath { get; }
+        public string PageSize { get; }
+        public int CopyCount { get; }
+        public List<int> SelectedPages { get; private set; }
+        public PricingQR(string fileName, string filePath, string pageSize, int copyCount, List<int> selectedPages)
         {
             InitializeComponent();
+            FileName = fileName;
+            FilePath = filePath;
+            PageSize = pageSize;
+            CopyCount = copyCount;
+            SelectedPages = selectedPages;
+
+            DisplayData();
         }
 
-        private void DisplayDetails(string selectedColor, int copyCount, int pagesToPrint, string filePath, string fileName, int totalPrice)
+       
+
+        private void DisplayData()
         {
-            // Ensure you have corresponding TextBlocks in your XAML to display these values
-            FileNameTextBlock.Text = $"File Name: {fileName}";
-           
-            ColorModeTextBlock.Text = $"Color Mode: {selectedColor}";
-            PageCountTextBlock.Text = $"Selected Page(s): {pagesToPrint}";
-            CopyCountTextBlock.Text = $"Copy Count: {copyCount}";
-            PriceTextBlock.Text = $"Total Price: {totalPrice} coins";
+            string selectedPagesText = string.Join(", ", SelectedPages); // Convert list of selected pages to a comma-separated string
+            PageCountTextBlock.Text = $"Selected Page(s): {SelectedPages}";
+            FileNameTextBlock.Text = $"File Name: {FileName}";
+            CopyCountTextBlock.Text = $"Copy Count: {CopyCount}";
+            
         }
     }
 }

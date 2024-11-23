@@ -41,15 +41,44 @@ namespace kiosk_snapprint
         // Confirm button click handler
         private void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Proceeding to print the file.");
-            // Insert printing logic here
+            // Create an instance of the qrcode UserControl and pass the session I
+            HomeUserControl HomeUserControl = new HomeUserControl();
+
+            // Access the MainWindow instance
+            MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
+
+            if (mainWindow != null)
+            {
+                // Set the content to display the QR page (assuming a ContentControl named MainContent)
+                mainWindow.MainContent.Content = HomeUserControl;
+            }
+            else
+            {
+                // Handle error if MainWindow is null
+                MessageBox.Show("MainWindow instance is not available.");
+            }
         }
 
         // Cancel button click handler
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Printing canceled.");
-            // Insert logic to navigate back or close the user control
+             // Create an instance of the qrcode UserControl and pass the session I
+            HomeUserControl HomeUserControl = new HomeUserControl();
+
+            // Access the MainWindow instance
+            MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
+
+            if (mainWindow != null)
+            {
+                // Set the content to display the QR page (assuming a ContentControl named MainContent)
+                mainWindow.MainContent.Content = HomeUserControl;
+            }
+            else
+            {
+                // Handle error if MainWindow is null
+                MessageBox.Show("MainWindow instance is not available.");
+            }
+            
         }
     }
 }

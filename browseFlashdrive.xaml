@@ -35,7 +35,7 @@
                 <DataTemplate>
                     <StackPanel Width="150" Margin="10" Orientation="Vertical" HorizontalAlignment="Center">
                         <!-- Larger Icon -->
-                        <Image Source="C:\Users\YUJI\source\repos\kiosk_snapprint\pdficon.png" Width="100" Height="100" />
+                        <Image Source="C:\Users\rmbar\source\repos\kiosk_snapprint\pdficon.png" Width="100" Height="100" />
                         <!-- File Name -->
                         <TextBlock Text="{Binding FileName}"
                                    TextAlignment="Center"

@@ -6,10 +6,10 @@
  xmlns:local="clr-namespace:kiosk_snapprint"
  mc:Ignorable="d"
  Title="MainWindow" 
- ResizeMode="CanResize"
+ ResizeMode="NoResize"
  Topmost="True"
  Height="1080" 
- Width="1900" WindowStartupLocation="CenterScreen" WindowStyle="SingleBorderWindow" WindowState="Normal">
+ Width="1900" WindowStartupLocation="CenterScreen" WindowStyle="None" WindowState="Maximized">
 
     <Grid>
         <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" />

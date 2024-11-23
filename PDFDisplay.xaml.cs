@@ -13,16 +13,14 @@ namespace kiosk_snapprint
     public partial class PDFDisplay : UserControl
     {
         private int copyCount = 1;
-        private int selectedPage = 0;
         public string FilePath { get; private set; }
         public string FileName { get; private set; }
         public string PageSize { get; private set; }
         public int PageCount { get; private set; }
 
-       
 
-        
-       
+        private List<int> selectedPages = new List<int>();
+
 
 
         public PDFDisplay(string filePath, string fileName, string pageSize, int pageCount)
@@ -39,9 +37,11 @@ namespace kiosk_snapprint
             // Initialize the copy count display
             CopyCountTextBlock.Text = copyCount.ToString();
             PopulatePageSelection();
-          
 
-           
+            pdfViewer.ZoomMode = Syncfusion.Windows.PdfViewer.ZoomMode.FitPage;
+
+
+
 
         }
 
@@ -80,43 +80,7 @@ namespace kiosk_snapprint
 
 
         // Method to populate the ComboBox with page options and 'Print All Pages'
-        private void PopulatePageSelection()
-        {
-            // Clear existing items
-            PageSelectionComboBox.Items.Clear();
-
-            // Add options for each page
-            for (int i = 1; i <= PageCount; i++)
-            {
-                PageSelectionComboBox.Items.Add(new ComboBoxItem { Content = $"Page {i}" });
-            }
-
-            // Add the 'Print All Pages' option
-            PageSelectionComboBox.Items.Add(new ComboBoxItem { Content = "Print All Pages" });
-
-            // Set the default selection to 'Print All Pages'
-            PageSelectionComboBox.SelectedIndex = PageCount;  // 'Print All Pages' by default
-        }
-
-        // Handle ComboBox selection change
-        private void PageSelectionComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            // Ensure selectedPage reflects the user's selection
-            if (PageSelectionComboBox.SelectedItem != null)
-            {
-                // Assuming the ComboBox contains integers as items
-                bool isParsed = int.TryParse(PageSelectionComboBox.SelectedItem.ToString(), out int page);
-                selectedPage = isParsed ? page : 0; // Set selectedPage only if parsing succeeds
-            }
-            else
-            {
-                selectedPage = 0; // Default or fallback value
-            }
-        }
-
-
-
-
+     
 
 
         // Event handler for decreasing the number of copies
@@ -145,25 +109,84 @@ namespace kiosk_snapprint
             CopyCountTextBlock.Text = copyCount.ToString();
         }
 
+        private void PopulatePageSelection()
+        {
+            // Clear existing items
+            PageSelectionListBox.Items.Clear();
+
+            // Add options for each page
+            for (int i = 1; i <= PageCount; i++)
+            {
+                PageSelectionListBox.Items.Add(new ListBoxItem { Content = $"Page {i}" });
+            }
+
+            // Add the 'Print All Pages' option
+            PageSelectionListBox.Items.Add(new ListBoxItem { Content = "Print All Pages" });
+        }
 
 
+        private void PageSelectionListBox_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
+        {
+            var selectedPages = new List<int>(); // List to store the selected page numbers
+
+            // Check if "Print All Pages" is selected
+            bool printAllPagesSelected = PageSelectionListBox.SelectedItems.Contains(PageSelectionListBox.Items[PageCount]); // 'Print All Pages' index
+
+            // If 'Print All Pages' is selected, include all pages
+            if (printAllPagesSelected)
+            {
+                selectedPages.Clear(); // Clear existing selections
+                for (int i = 1; i <= PageCount; i++) // Add all pages
+                {
+                    selectedPages.Add(i);
+                }
+            }
+            else
+            {
+                // Loop through the selected items and add their corresponding page numbers
+                foreach (ListBoxItem item in PageSelectionListBox.SelectedItems)
+                {
+                    // Try to extract the page number from the item content
+                    var content = item.Content.ToString();
+                    if (content.Contains("Page"))
+                    {
+                        var pageNumber = int.Parse(content.Replace("Page", "").Trim());
+                        selectedPages.Add(pageNumber);  // Add the page number to the list
+                    }
+                }
+            }
+
+            // Now, selectedPages contains all the selected pages
+            // You can use selectedPages for computation or sending to the next user control
+            // For example, you can display the selected pages or use it for print processing:
+            Console.WriteLine("Selected Pages: " + string.Join(", ", selectedPages));
+
+            // Do something with selectedPages, e.g., pass it to the print function
+        }
 
         private void PROCEED_Click(object sender, RoutedEventArgs e)
         {
             
+
+            // Create an instance of the qrcode UserControl and pass the session I
+            HomeUserControl HomeUserControl = new HomeUserControl();
+
+            // Access the MainWindow instance
+            MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
+
+            if (mainWindow != null)
+            {
+                // Set the content to display the QR page (assuming a ContentControl named MainContent)
+                mainWindow.MainContent.Content = HomeUserControl;
+            }
+            else
+            {
+                // Handle error if MainWindow is null
+                MessageBox.Show("MainWindow instance is not available.");
+            }
+
+
         }
-
-        private void NavigateToPricingQR(PricingQR pricingQR)
-        {
-           
-        }
-
-
-
-
-
-
-
     }
 
 }

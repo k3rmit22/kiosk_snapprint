@@ -6,63 +6,98 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:kiosk_snapprint"
              mc:Ignorable="d" 
-            d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800">
     <Grid Background="White">
         <!-- Define Columns -->
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*" />
-
             <ColumnDefinition Width="2*" />
-            <!-- For Preferences Panel -->
         </Grid.ColumnDefinitions>
 
         <!-- PDF Viewer -->
-        <Border Grid.Column="0" Background="Gray" Margin="20">
-            <!-- Replace with Syncfusion PDF Viewer Control -->
-            <syncfusion:PdfViewerControl x:Name="pdfViewer" 
-                       HorizontalAlignment="Center" 
-                       VerticalAlignment="Center" 
-                       FontSize="12" Height="430" Width="470" />
-        </Border>
+        <syncfusion:PdfViewerControl x:Name="pdfViewer" 
+                                     Grid.Column="0"
+                                     FontSize="12" 
+                                     Margin="10" ZoomMode="FitPage" />
 
         <!-- Preferences Panel -->
-        <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Height="388" Width="310">
+        <StackPanel Grid.Column="1" 
+                    VerticalAlignment="Center" 
+                    HorizontalAlignment="Center" 
+                    Background="#F5F5F5" 
+                    Margin="10" 
+                    
+                    Width="310">
             <!-- Preferences Header -->
             <TextBlock Text="Preferences" 
                        FontSize="30" 
                        FontWeight="Bold" 
                        HorizontalAlignment="Center" 
-                       Margin="0,0,0,40" />
+                       Margin="0,0,0,30" />
 
             <!-- Select Page to Print -->
-            <TextBlock Text="Select a page to print?" 
-                       FontSize="20"  HorizontalAlignment="Center" 
-                       Margin="0,0,0,20" FontWeight="Bold" />
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,40">
-                <ComboBox x:Name="PageSelectionComboBox" Width="205" Height="42" 
-              SelectionChanged="PageSelectionComboBox_SelectionChanged" FontSize="24">
-                    <!-- ComboBox items will be populated dynamically in the code-behind -->
-                </ComboBox>
-            </StackPanel>
+            <TextBlock Text="Select a page to print:" 
+                       FontSize="20" 
+                       HorizontalAlignment="Center" 
+                       Margin="0,0,0,10" 
+                       FontWeight="Bold" />
+            <!--<ComboBox x:Name="PageSelectionComboBox" 
+                      Width="250" 
+                      Height="40" 
+                      FontSize="18"
+                      SelectionChanged="PageSelectionComboBox_SelectionChanged">
+                -->
+            <!-- Items will be added dynamically in the code-behind -->
+            <!--
+            </ComboBox>-->
+
+            <ListBox x:Name="PageSelectionListBox" Width="203" Height="74" 
+                    SelectionMode="Multiple" FontSize="24" 
+                    Margin="10" ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionChanged="PageSelectionListBox_SelectionChanged_1" />
 
             <!-- Number of Copies -->
-            <TextBlock Text="How Many copies to print?" 
-                       FontSize="20"  HorizontalAlignment="Center" 
-                       Margin="0,0,0,20" FontWeight="Bold" />
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button  x:Name="DecreaseButton" Content="-" Width="54" Height="45" FontSize="30"  Margin="10" FontWeight="Bold"  Click="DecreaseCopyCount_Click" />
-                <TextBlock x:Name="CopyCountTextBlock" Text="1" 
+            <TextBlock Text="Number of copies:" 
+                       FontSize="20"  
+                       HorizontalAlignment="Center" 
+                       Margin="0,0,0,10" 
+                       FontWeight="Bold" />
+            <StackPanel Orientation="Horizontal" 
+                        HorizontalAlignment="Center" 
+                        Margin="0,0,0,20">
+                <Button x:Name="DecreaseButton" 
+                        Content="-" 
+                        Width="50" 
+                        Height="45" 
+                        FontSize="24" 
+                        FontWeight="Bold" 
+                        Click="DecreaseCopyCount_Click" />
+                <TextBlock x:Name="CopyCountTextBlock" 
+                           Text="1" 
                            Width="60" 
-                           Height="49" 
+                           Height="45" 
                            TextAlignment="Center" 
                            VerticalAlignment="Center" 
-                           FontSize="36" FontWeight="Bold" />
-                <Button x:Name="IncreaseButton" Content="+" Width="50" Height="44" FontSize="30" Margin="10" FontWeight="Bold" Click="IncreaseCopyCount_Click"/>
-            </StackPanel>
-            <StackPanel Height="100">
-                <Button x:Name="ProceedButton" Content="" Width="187" Height="41" FontSize="20" Margin="10" FontWeight="Bold" Click="PROCEED_Click" ></Button>
+                           FontSize="24" 
+                           FontWeight="Bold" 
+                           Margin="10,0" />
+                <Button x:Name="IncreaseButton" 
+                        Content="+" 
+                        Width="50" 
+                        Height="45" 
+                        FontSize="24" 
+                        FontWeight="Bold" 
+                        Click="IncreaseCopyCount_Click" />
             </StackPanel>
 
+            <!-- Proceed Button -->
+            <Button x:Name="ProceedButton" 
+                    Content="Proceed" 
+                    Width="200" 
+                    Height="50" 
+                    FontSize="20" 
+                    FontWeight="Bold" 
+                    Margin="0,20,0,0"
+                    Click="PROCEED_Click" />
         </StackPanel>
     </Grid>
 </UserControl>
