@@ -43,6 +43,14 @@ namespace kiosk_snapprint
 
         private void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
+            // Limit the number of pages to 10
+            if (PageCount > 10)
+            {
+                cautionTextBlock.Visibility = Visibility.Visible;
+                cautionTextBlock.Text = "10 pages is the maximum page limit!";
+                return;
+            }
+
             var mainWindow = Application.Current.MainWindow as MainWindow;
 
             if (mainWindow != null)
