@@ -65,32 +65,47 @@ namespace kiosk_snapprint
             }
         }
 
-      
+
         // Handle single click (selection) to load proceedPrinting UserControl
         private void pdfFileListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var selectedFile = pdfFileListView.SelectedItem as FileItem;
-            if (selectedFile != null)
+            // Ensure an item is selected
+            if (pdfFileListView.SelectedItem is FileItem selectedFile)
             {
-                // Create a new instance of proceedPrinting UserControl and pass the file path to it
-                var proceedPrintingControl = new proceedPrinting(selectedFile.FilePath);
-
-                // Assuming you have a ContentControl in the parent (such as MainWindow or another container)
-                var parentControl = this.Parent as ContentControl;
-                if (parentControl != null)
+                // Create and open the modal
+                var proceedPrintingWindow = new proceedPrinting(selectedFile.FilePath)
                 {
-                    // Set the new UserControl as the content of the parent control
-                    parentControl.Content = proceedPrintingControl;
+                    Owner = Application.Current.MainWindow, // Set owner to ensure modal behavior
+                    WindowStartupLocation = WindowStartupLocation.CenterOwner // Center to parent window
+                };
+
+                // Show the modal window
+                bool? result = proceedPrintingWindow.ShowDialog();
+
+                // Handle the user's response
+                if (result == true)
+                {
+                    MessageBox.Show("User confirmed printing.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
+                else
+                {
+                    MessageBox.Show("User canceled printing.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+
+                // Clear selection to avoid repeated triggering
+                pdfFileListView.SelectedItem = null;
             }
         }
 
+
+
+        // Helper class to hold file information
+        public class FileItem
+        {
+            public string FileName { get; set; }
+            public string FilePath { get; set; }
+        }
     }
 
-    // Helper class to hold file information
-    public class FileItem
-    {
-        public string FileName { get; set; }
-        public string FilePath { get; set; }
-    }
+
 }

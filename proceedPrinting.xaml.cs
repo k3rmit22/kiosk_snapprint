@@ -15,7 +15,7 @@ using System.Windows.Shapes;
 
 namespace kiosk_snapprint
 {
-    public partial class proceedPrinting : UserControl
+    public partial class proceedPrinting : Window
     {
         private string FilePath { get; set; }
         private string FileName { get; set; }
@@ -34,13 +34,31 @@ namespace kiosk_snapprint
 
         private void DisplayFileDetails()
         {
-            // Display both the file name and the file path
-            selectedFilePathTextBlock.Text = $" {FileName}";
+            // Display the file name
+            selectedFilePathTextBlock.Text = $"{FileName}";
         }
 
         // Confirm button click handler
         private void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
+           
+
+            // Assuming the main window contains a placeholder (like a Grid or a StackPanel) to display the PDFControl
+            // Get the main window instance
+            var mainWindow = Application.Current.MainWindow as MainWindow;
+
+            if (mainWindow != null)
+            {
+                // Create an instance of the PDFDisplay UserControl and pass the file path
+                var pdfDisplay = new PDFDisplay(FilePath, FileName, "A4", 5);  // Pass file details and sample page count
+                pdfDisplay.LoadPdfAsync(FilePath);  // Load the PDF into the viewer
+
+                // Assuming there is a container in the main window (e.g., a Grid) named 'MainContent'
+                mainWindow.MainContent.Content = pdfDisplay;  // Add the PDFDisplay control to the main window
+
+           
+                this.Close();
+            }
             // Create an instance of the qrcode UserControl and pass the session I
             HomeUserControl HomeUserControl = new HomeUserControl();
 
@@ -59,9 +77,14 @@ namespace kiosk_snapprint
             }
         }
 
+
+
+
         // Cancel button click handler
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
+           
+            this.Close();
              // Create an instance of the qrcode UserControl and pass the session I
             HomeUserControl HomeUserControl = new HomeUserControl();
 
