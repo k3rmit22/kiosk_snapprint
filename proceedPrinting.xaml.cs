@@ -41,7 +41,7 @@ namespace kiosk_snapprint
         // Confirm button click handler
         private void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
-           
+
 
             // Assuming the main window contains a placeholder (like a Grid or a StackPanel) to display the PDFControl
             // Get the main window instance
@@ -56,24 +56,8 @@ namespace kiosk_snapprint
                 // Assuming there is a container in the main window (e.g., a Grid) named 'MainContent'
                 mainWindow.MainContent.Content = pdfDisplay;  // Add the PDFDisplay control to the main window
 
-           
+
                 this.Close();
-            }
-            // Create an instance of the qrcode UserControl and pass the session I
-            HomeUserControl HomeUserControl = new HomeUserControl();
-
-            // Access the MainWindow instance
-            MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
-
-            if (mainWindow != null)
-            {
-                // Set the content to display the QR page (assuming a ContentControl named MainContent)
-                mainWindow.MainContent.Content = HomeUserControl;
-            }
-            else
-            {
-                // Handle error if MainWindow is null
-                MessageBox.Show("MainWindow instance is not available.");
             }
         }
 
@@ -83,25 +67,8 @@ namespace kiosk_snapprint
         // Cancel button click handler
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-           
+
             this.Close();
-             // Create an instance of the qrcode UserControl and pass the session I
-            HomeUserControl HomeUserControl = new HomeUserControl();
-
-            // Access the MainWindow instance
-            MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
-
-            if (mainWindow != null)
-            {
-                // Set the content to display the QR page (assuming a ContentControl named MainContent)
-                mainWindow.MainContent.Content = HomeUserControl;
-            }
-            else
-            {
-                // Handle error if MainWindow is null
-                MessageBox.Show("MainWindow instance is not available.");
-            }
-            
         }
     }
 }
