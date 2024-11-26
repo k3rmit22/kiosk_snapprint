@@ -7,8 +7,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="1080" d:DesignWidth="1900">
     <Grid Background="White">
-        <Image Margin="778,697,778,148" Source="/flashdrive.png"/>
-        <Label Content="PLEASE INSERT YOUR FLASHDRIVE." HorizontalAlignment="Left" Margin="557,477,0,0" VerticalAlignment="Top" Width="778" FontSize="40" FontWeight="Bold"/>
+        <Image Margin="760,703,720,105" Source="/flashdrive.png"/>
+        <Label Content=" Step 1: Insert your Flashdrive to the USB Port" HorizontalAlignment="Left" Margin="390,483,0,0" VerticalAlignment="Top" Width="1159" FontSize="48" FontWeight="Bold" Height="175"/>
         <Button  Content="Back"  HorizontalAlignment="Left" VerticalAlignment="Top" 
             Width="200" Height="115" Click="BackButton_Click" Margin="119,122,0,0" FontWeight="Bold" FontSize="40" BorderBrush="Black" Background="White" Foreground="#FF080808" BorderThickness="5,5,5,5"
                 />

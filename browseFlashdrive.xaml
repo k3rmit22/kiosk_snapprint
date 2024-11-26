@@ -8,21 +8,35 @@
              Background="#FFFFFF">
 
     <Grid>
+        <!-- Back Button -->
+        <Button Content="Back"
+                Width="132"
+                Height="64"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Margin="26,26,0,0"
+                Click="BackButton_Click" Background="White" FontWeight="Bold" FontSize="20" BorderThickness="3,3,3,3" BorderBrush="Black" />
+
         <!-- Title at the Top -->
-        <TextBlock Text="SELECT A PDF FILE"
+        <TextBlock Text="Step 2: SELECT A PDF FILE"
                    FontSize="24"
                    FontWeight="Bold"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Top"
-                   Margin="0,10,0,20" />
+                   Margin="0,40,0,0" />
 
-        <!-- Horizontal Layout for ListView -->
+        <!-- ListView for PDF Files -->
         <ListView Name="pdfFileListView"
-                  Margin="20,60,20,20"
+                  Margin="20,116,20,20"
                   BorderThickness="1"
-                  BorderBrush="#CCCCCC"
                   Background="#F9F9F9"
                   SelectionChanged="pdfFileListView_SelectionChanged">
+            <ListView.BorderBrush>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black"/>
+                    <GradientStop Color="White" Offset="1"/>
+                </LinearGradientBrush>
+            </ListView.BorderBrush>
             <!-- Change the ItemsPanel to a WrapPanel for Horizontal Layout -->
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
