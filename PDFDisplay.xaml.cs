@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using Syncfusion.Windows.PdfViewer; 
+using Syncfusion.Windows.PdfViewer;
+using iText.Kernel.Pdf; 
+using iText.Layout;
+using iText.Layout.Element;
 
 
 namespace kiosk_snapprint
@@ -12,18 +16,17 @@ namespace kiosk_snapprint
     /// </summary>
     public partial class PDFDisplay : UserControl
     {
-        private int copyCount = 1;
+        
         public string FilePath { get; private set; }
         public string FileName { get; private set; }
         public string PageSize { get; private set; }
         public int PageCount { get; private set; }
 
+        public string Colorstatus { get; private set; }
 
         private List<int> selectedPages = new List<int>();
 
-
-
-        public PDFDisplay(string filePath, string fileName, string pageSize, int pageCount)
+        public PDFDisplay(string filePath, string fileName, string pageSize, int pageCount, string colorstatus)
         {
             InitializeComponent();
             
@@ -33,16 +36,12 @@ namespace kiosk_snapprint
             FileName = fileName;
             PageSize = pageSize;
             PageCount = pageCount;
+            Colorstatus = colorstatus; 
 
             // Initialize the copy count display
-            CopyCountTextBlock.Text = copyCount.ToString();
-            PopulatePageSelection();
-
             pdfViewer.ZoomMode = Syncfusion.Windows.PdfViewer.ZoomMode.FitPage;
 
-
-
-
+            PopulatePageCheckboxes(filePath);
         }
 
         public async Task LoadPdfAsync(string filePath)
@@ -78,98 +77,73 @@ namespace kiosk_snapprint
             MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-
-        // Method to populate the ComboBox with page options and 'Print All Pages'
-     
-
-
-        // Event handler for decreasing the number of copies
-        private void DecreaseCopyCount_Click(object sender, RoutedEventArgs e)
+        // Method to populate checkboxes for each page in the PDF
+        private void PopulatePageCheckboxes(string filePath)
         {
-            if (copyCount > 1) // Ensure copy count doesn't go below 1
+            try
             {
-                copyCount--;
-                UpdateCopyCountDisplay();
-            }
-        }
-
-        private void IncreaseCopyCount_Click(object sender, RoutedEventArgs e)
-        {
-            if (copyCount < 5) // Limit the copy count to a maximum of 5
-            {
-                copyCount++;
-                UpdateCopyCountDisplay();
-            }
-
-        }
-
-        // Updates the display of the current copy count
-        private void UpdateCopyCountDisplay()
-        {
-            CopyCountTextBlock.Text = copyCount.ToString();
-        }
-
-        private void PopulatePageSelection()
-        {
-            // Clear existing items
-            PageSelectionListBox.Items.Clear();
-
-            // Add options for each page
-            for (int i = 1; i <= PageCount; i++)
-            {
-                PageSelectionListBox.Items.Add(new ListBoxItem { Content = $"Page {i}" });
-            }
-
-            // Add the 'Print All Pages' option
-            PageSelectionListBox.Items.Add(new ListBoxItem { Content = "Print All Pages" });
-        }
-
-
-        private void PageSelectionListBox_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
-        {
-            var selectedPages = new List<int>(); // List to store the selected page numbers
-
-            // Check if "Print All Pages" is selected
-            bool printAllPagesSelected = PageSelectionListBox.SelectedItems.Contains(PageSelectionListBox.Items[PageCount]); // 'Print All Pages' index
-
-            // If 'Print All Pages' is selected, include all pages
-            if (printAllPagesSelected)
-            {
-                selectedPages.Clear(); // Clear existing selections
-                for (int i = 1; i <= PageCount; i++) // Add all pages
+                // Open the PDF to get the page count using iText7
+                using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(filePath)))
                 {
-                    selectedPages.Add(i);
-                }
-            }
-            else
-            {
-                // Loop through the selected items and add their corresponding page numbers
-                foreach (ListBoxItem item in PageSelectionListBox.SelectedItems)
-                {
-                    // Try to extract the page number from the item content
-                    var content = item.Content.ToString();
-                    if (content.Contains("Page"))
+                    PageCount = pdfDoc.GetNumberOfPages(); // Get the total page count
+                    for (int i = 1; i <= PageCount; i++)
                     {
-                        var pageNumber = int.Parse(content.Replace("Page", "").Trim());
-                        selectedPages.Add(pageNumber);  // Add the page number to the list
+                        // Create a CheckBox for each page
+                        CheckBox pageCheckBox = new CheckBox
+                        {
+                            Content = $"Page {i}",
+                            FontSize = 15,
+                            Tag = i // Store the page number in the Tag for later retrieval
+                        };
+
+                        // Add an event handler for checking/unchecking
+                        pageCheckBox.Checked += PageCheckBox_Checked;
+                        pageCheckBox.Unchecked += PageCheckBox_Unchecked;
+
+                        // Add the CheckBox to the ListBox (or StackPanel, depending on your design)
+                        PageSelectionStackPanel.Children.Add(pageCheckBox); // Assuming you use a StackPanel
                     }
                 }
             }
-
-            // Now, selectedPages contains all the selected pages
-            // You can use selectedPages for computation or sending to the next user control
-            // For example, you can display the selected pages or use it for print processing:
-            Console.WriteLine("Selected Pages: " + string.Join(", ", selectedPages));
-
-            // Do something with selectedPages, e.g., pass it to the print function
+            catch (Exception ex)
+            {
+                ShowError($"Error reading PDF: {ex.Message}");
+            }
         }
+
+        // Event handler for when a checkbox is checked
+        private void PageCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            var checkBox = sender as CheckBox;
+            if (checkBox != null && checkBox.Tag != null)
+            {
+                int pageNumber = (int)checkBox.Tag;
+                if (!selectedPages.Contains(pageNumber)) // Prevent duplicate entries
+                {
+                    selectedPages.Add(pageNumber);
+                }
+            }
+        }
+        private void PageCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            var checkBox = sender as CheckBox;
+            if (checkBox != null && checkBox.Tag != null)
+            {
+                int pageNumber = (int)checkBox.Tag;
+                selectedPages.Remove(pageNumber);
+            }
+        }
+
+
+
 
         private void PROCEED_Click(object sender, RoutedEventArgs e)
         {
-            
+            // Get the number of selected pages
+            int numberOfSelectedPages = selectedPages.Count;
 
             // Create an instance of the qrcode UserControl and pass the session I
-            HomeUserControl HomeUserControl = new HomeUserControl();
+            QR_preferences QR_preferences = new QR_preferences(FilePath, FileName, PageSize, PageCount, Colorstatus, selectedPages, numberOfSelectedPages);
 
             // Access the MainWindow instance
             MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
@@ -177,7 +151,7 @@ namespace kiosk_snapprint
             if (mainWindow != null)
             {
                 // Set the content to display the QR page (assuming a ContentControl named MainContent)
-                mainWindow.MainContent.Content = HomeUserControl;
+                mainWindow.MainContent.Content = QR_preferences;
             }
             else
             {

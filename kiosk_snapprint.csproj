@@ -11,12 +11,14 @@
   <ItemGroup>
     <None Remove="flashdrive.png" />
     <None Remove="passcode.png" />
+    <None Remove="pdficon.png" />
     <None Remove="scanner.png" />
     <None Remove="white-back-icon-17.jpg" />
     <None Remove="wow.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="itext7" Version="9.0.0" />
     <PackageReference Include="iTextSharp" Version="5.5.13.4" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.0" />
     <PackageReference Include="PdfiumViewer" Version="2.13.0" />
@@ -31,6 +33,7 @@
   <ItemGroup>
     <Resource Include="flashdrive.png" />
     <Resource Include="passcode.png" />
+    <Resource Include="pdficon.png" />
     <Resource Include="scanner.png" />
     <Resource Include="white-back-icon-17.jpg" />
     <Resource Include="wow.png" />

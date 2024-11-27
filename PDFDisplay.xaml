@@ -25,11 +25,9 @@
                     VerticalAlignment="Center" 
                     HorizontalAlignment="Center" 
                     Background="#F5F5F5" 
-                    Margin="10" 
-                    
-                    Width="310">
+                    Width="310" Height="357">
             <!-- Preferences Header -->
-            <TextBlock Text="Preferences" 
+            <TextBlock Text="Step 3:Preferences" 
                        FontSize="30" 
                        FontWeight="Bold" 
                        HorizontalAlignment="Center" 
@@ -41,58 +39,18 @@
                        HorizontalAlignment="Center" 
                        Margin="0,0,0,10" 
                        FontWeight="Bold" />
-            <!--<ComboBox x:Name="PageSelectionComboBox" 
-                      Width="250" 
-                      Height="40" 
-                      FontSize="18"
-                      SelectionChanged="PageSelectionComboBox_SelectionChanged">
-                -->
-            <!-- Items will be added dynamically in the code-behind -->
-            <!--
-            </ComboBox>-->
 
-            <ListBox x:Name="PageSelectionListBox" Width="203" Height="74" 
-                    SelectionMode="Multiple" FontSize="24" 
-                    Margin="10" ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionChanged="PageSelectionListBox_SelectionChanged_1" />
-
-            <!-- Number of Copies -->
-            <TextBlock Text="Number of copies:" 
-                       FontSize="20"  
-                       HorizontalAlignment="Center" 
-                       Margin="0,0,0,10" 
-                       FontWeight="Bold" />
-            <StackPanel Orientation="Horizontal" 
-                        HorizontalAlignment="Center" 
-                        Margin="0,0,0,20">
-                <Button x:Name="DecreaseButton" 
-                        Content="-" 
-                        Width="50" 
-                        Height="45" 
-                        FontSize="24" 
-                        FontWeight="Bold" 
-                        Click="DecreaseCopyCount_Click" />
-                <TextBlock x:Name="CopyCountTextBlock" 
-                           Text="1" 
-                           Width="60" 
-                           Height="45" 
-                           TextAlignment="Center" 
-                           VerticalAlignment="Center" 
-                           FontSize="24" 
-                           FontWeight="Bold" 
-                           Margin="10,0" />
-                <Button x:Name="IncreaseButton" 
-                        Content="+" 
-                        Width="50" 
-                        Height="45" 
-                        FontSize="24" 
-                        FontWeight="Bold" 
-                        Click="IncreaseCopyCount_Click" />
-            </StackPanel>
+            <!-- StackPanel for checkboxes -->
+            <ScrollViewer Width="202" Height="137" Margin="10">
+                <StackPanel x:Name="PageSelectionStackPanel" >
+                    <!-- Dynamically generated checkboxes will be added here -->
+                </StackPanel>
+            </ScrollViewer>
 
             <!-- Proceed Button -->
             <Button x:Name="ProceedButton" 
-                    Content="Proceed" 
-                    Width="200" 
+                    Content="Next" 
+                    Width="190" 
                     Height="50" 
                     FontSize="20" 
                     FontWeight="Bold" 

@@ -83,7 +83,7 @@ namespace kiosk_snapprint
                         paperSize = "Legal (Long)";
 
                     // Check if the PDF contains color or is grayscale
-                    string colorStatus = DetectColorStatus(reader);
+                    string Colortype = DetectColorStatus(reader);
 
                     return new FileItem
                     {
@@ -91,7 +91,7 @@ namespace kiosk_snapprint
                         FilePath = filePath,
                         PageCount = pageCount,
                         PaperSize = paperSize,
-                        ColorStatus = colorStatus
+                       
                     };
                 }
             }

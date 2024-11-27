@@ -43,33 +43,7 @@ namespace kiosk_snapprint
 
         }
 
-        //private async void SetupSignalR()
-        //{
-        //    var hubConnection = new HubConnectionBuilder()
-        //        .WithUrl("http://192.168.137.1:5082/Hubs/fileUploadHub")
-        //        .Build();
 
-        //    // Register a method to receive messages from the server
-        //    hubConnection.On<string>("ReceiveMessage", async (message) =>
-        //    {
-        //        System.Diagnostics.Debug.WriteLine($"Received SignalR message: {message}");
-        //        if (message.Contains($"File uploaded successfully for session {sessionId}"))
-        //        {
-        //            await FetchFileDetails();
-        //        }
-        //    });
-
-        //    // Start the SignalR connection
-        //    try
-        //    {
-        //        await hubConnection.StartAsync();
-        //        System.Diagnostics.Debug.WriteLine("Connected to SignalR hub.");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        System.Diagnostics.Debug.WriteLine($"Error connecting to SignalR hub: {ex.Message}");
-        //    }
-        //}
         private async void SetupSignalR()
         {
             var hubConnection = new HubConnectionBuilder()
@@ -149,7 +123,9 @@ namespace kiosk_snapprint
                         System.Diagnostics.Debug.WriteLine($"File Path: {fileDetails.FilePath}");
                         System.Diagnostics.Debug.WriteLine($"File Name: {fileDetails.FileName}");
                         System.Diagnostics.Debug.WriteLine($"Page Size: {fileDetails.PageSize}");
-                        System.Diagnostics.Debug.WriteLine($"Page Count: {fileDetails.PageCount}");
+                        System.Diagnostics.Debug.WriteLine($"Page color: {fileDetails.ColorStatus}");
+
+
                         NavigateToPDFDisplay(fileDetails);
                     });
                 }
@@ -190,28 +166,11 @@ namespace kiosk_snapprint
             }
         }
 
-        //private void NavigateToPDFDisplay(FileDetails fileDetails)
-        //{
-        //    var pdfDisplay = new PDFDisplay(fileDetails.FilePath, fileDetails.FileName, fileDetails.PageSize, fileDetails.PageCount);
-
-        //    // Retrieve the current main window instance and set the content on the UI thread
-        //    if (Application.Current.MainWindow is MainWindow mainWindow)
-        //    {
-        //        // Ensure this happens on the UI thread
-        //        mainWindow.Dispatcher.Invoke(() =>
-        //        {
-        //            mainWindow.MainContent.Content = pdfDisplay; // Update MainContent in the MainWindow instance
-        //        });
-        //    }
-        //    else
-        //    {
-        //        ShowError("Main window instance not found.");
-        //    }
-        //}
+     
         private async void NavigateToPDFDisplay(FileDetails fileDetails)
         {
             // Create an instance of PDFDisplay and pass the file details
-            var pdfDisplay = new PDFDisplay(fileDetails.FilePath, fileDetails.FileName, fileDetails.PageSize, fileDetails.PageCount);
+            var pdfDisplay = new PDFDisplay(fileDetails.FilePath, fileDetails.FileName, fileDetails.PageSize, fileDetails.PageCount, fileDetails.ColorStatus);
 
             // Retrieve the current main window instance and set the content on the UI thread
             if (Application.Current.MainWindow is MainWindow mainWindow)
@@ -246,6 +205,7 @@ namespace kiosk_snapprint
             public string FileName { get; set; }
             public string PageSize { get; set; }
             public int PageCount { get; set; }
+            public string ColorStatus { get; set; }
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
