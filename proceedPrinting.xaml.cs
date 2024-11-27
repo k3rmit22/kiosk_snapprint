@@ -51,30 +51,20 @@ namespace kiosk_snapprint
                 return;
             }
 
-
             var mainWindow = Application.Current.MainWindow as MainWindow;
 
             if (mainWindow != null)
             {
-                var pdfDisplay = new PDFDisplay(FilePath, FileName, PaperSize, PageCount);
+                var pdfDisplay = new PDFDisplay(FilePath, FileName, PaperSize, PageCount, ColorStatus);
                 pdfDisplay.LoadPdfAsync(FilePath); // Load the PDF
 
                 mainWindow.MainContent.Content = pdfDisplay; // Add PDFDisplay control to the main window
-                // Create an instance of the PDFDisplay UserControl and pass the file path
-                var pdfDisplay = new PDFDisplay(FilePath, FileName, "A4", 5);  // Pass file details and sample page count
-                pdfDisplay.LoadPdfAsync(FilePath);  // Load the PDF into the viewer
-
-                // Assuming there is a container in the main window (e.g., a Grid) named 'MainContent'
-                mainWindow.MainContent.Content = pdfDisplay;  // Add the PDFDisplay control to the main window
-
-
                 this.Close();
             }
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-
             this.Close();
         }
     }
