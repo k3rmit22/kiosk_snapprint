@@ -83,7 +83,7 @@ namespace kiosk_snapprint
                         paperSize = "Legal (Long)";
 
                     // Check if the PDF contains color or is grayscale
-                    string Colortype = DetectColorStatus(reader);
+                    string colorStatus = DetectColorStatus(reader);
 
                     return new FileItem
                     {
@@ -91,7 +91,7 @@ namespace kiosk_snapprint
                         FilePath = filePath,
                         PageCount = pageCount,
                         PaperSize = paperSize,
-                       
+                        ColorStatus = colorStatus
                     };
                 }
             }
@@ -207,6 +207,15 @@ namespace kiosk_snapprint
                 pdfFileListView.SelectedItem = null;
             }
         }
+
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+
+            // Replace `HomeUserControl` with the appropriate UserControl for your home page
+            mainWindow.MainContent.Content = new HomeUserControl();
+        }
+
 
 
         // Helper class to hold file information
