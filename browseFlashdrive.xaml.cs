@@ -229,12 +229,4 @@
             }
         }
     }
-        {
-            public string FileName { get; set; }
-            public string FilePath { get; set; }
-            public string PaperSize { get; set; }
-            public string ColorStatus { get; set; }
-            public int PageCount { get; set; }
-        }
-    }
-}
+       
