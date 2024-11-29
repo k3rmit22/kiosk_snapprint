@@ -1,12 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace kiosk_snapprint
 {
-    /// <summary>
-    /// Interaction logic for PricingQR.xaml
-    /// </summary>
+   
     public partial class PricingQR : UserControl
     {
         public string FilePath { get; private set; }
@@ -17,21 +16,18 @@ namespace kiosk_snapprint
         public int CopyCount { get; private set; }
         public List<int> SelectedPages { get; private set; }
 
-       
         private readonly Dictionary<string, int> ColorStatusValues = new Dictionary<string, int>
         {
             { "colored", 10 },
             { "greyscale", 5 }
         };
 
-        
         private readonly Dictionary<string, int> PageSizeValues = new Dictionary<string, int>
         {
             { "a4", 5 },
-            { "letter", 5 },
-            { "letter", 10 }  
+            { "letter (short)", 5 },
+            { "legal (long)", 10 }
         };
-
 
         public PricingQR(string filePath, string fileName, string pageSize, string colorStatus,
             int numberOfSelectedPages, int copyCount, List<int> selectedPages)
@@ -46,26 +42,23 @@ namespace kiosk_snapprint
             NumberOfSelectedPages = numberOfSelectedPages;
             CopyCount = copyCount;
             SelectedPages = selectedPages;
-            Loadsummary(FileName, PageSize, ColorStatus, SelectedPages,CopyCount) ;
 
-            // Debug log the data (optional for troubleshooting)
-            System.Diagnostics.Debug.WriteLine($"FilePath: {FilePath}");
-            System.Diagnostics.Debug.WriteLine($"FileName: {FileName}");
-            System.Diagnostics.Debug.WriteLine($"PageSize: {PageSize}");
-            System.Diagnostics.Debug.WriteLine($"ColorStatus: {ColorStatus}");
-            System.Diagnostics.Debug.WriteLine($"NumberOfSelectedPages: {NumberOfSelectedPages}");
-            System.Diagnostics.Debug.WriteLine($"CopyCount: {CopyCount}");
-            System.Diagnostics.Debug.WriteLine($"SelectedPages: {string.Join(", ", SelectedPages)}");
-
+            
+            LoadSummary(FileName, PageSize, ColorStatus, SelectedPages, CopyCount);
         }
 
-        private void Loadsummary (string fileName, string pageSize, string colorStatus, List<int> selectedPages, int copyCount) 
+        private void LoadSummary(string fileName, string pageSize, string colorStatus, List<int> selectedPages, int copyCount)
         {
+            // Normalize input values (automatically convert to lowercase and trim spaces)
+            string normalizedPageSize = NormalizePageSize(pageSize);
+            string normalizedColorStatus = NormalizeColorStatus(colorStatus);
 
+            // Display data
             filename.Text = fileName;
-            color_label.Text = colorStatus;
-            pagesize_label.Text = pageSize;
+            color_label.Text = normalizedColorStatus;
+            pagesize_label.Text = normalizedPageSize;
             Copies_label.Text = copyCount.ToString();
+
             if (selected_pages_label != null && selectedPages != null)
             {
                 // Display the selected pages as a comma-separated string
@@ -73,28 +66,76 @@ namespace kiosk_snapprint
             }
 
             // Compute the total price
-            double totalPrice = ComputeTotalPrice(pageSize, colorStatus, selectedPages.Count, copyCount);
+            double totalPrice = ComputeTotalPrice(normalizedPageSize, normalizedColorStatus, selectedPages.Count, copyCount);
+            System.Diagnostics.Debug.WriteLine($"totalprice: {totalPrice}");
 
             // Display the total price
-            total_label.Text = $"${totalPrice}";
+            total_label.Text = $"{totalPrice}";
+        }
 
+        private string NormalizePageSize(string pageSize)
+        {
+            // Normalize: convert to lowercase and trim spaces
+            return pageSize?.Trim().ToLower();
+        }
+
+        private string NormalizeColorStatus(string colorStatus)
+        {
+            // Normalize: convert to lowercase and trim spaces
+            return colorStatus?.Trim().ToLower();
         }
 
         private double ComputeTotalPrice(string pageSize, string colorStatus, int numberOfSelectedPages, int copyCount)
         {
             // Get the numeric values for color status and page size
-            if (ColorStatusValues.TryGetValue(colorStatus.ToLower(), out int colorValue) &&
-                PageSizeValues.TryGetValue(pageSize.ToLower(), out int pageSizeValue))
+            if (ColorStatusValues.TryGetValue(colorStatus, out int colorValue) &&
+                PageSizeValues.TryGetValue(pageSize, out int pageSizeValue))
             {
-                // Formula: Paper Size + (Color Status * Number of Selected Pages * Copy Count)
-                double totalPrice = pageSizeValue + (colorValue * numberOfSelectedPages * copyCount);
+                // Formula: (Page Size Value + Color Value) * Number of Selected Pages * Copy Count
+                double totalPrice = (pageSizeValue + colorValue) * numberOfSelectedPages * copyCount;
                 return totalPrice;
             }
             else
             {
-                return 0.0; // If the color status or page size is invalid, return 0.
+                // Return 0 if either the color status or page size is invalid
+                return 0.0;
             }
         }
 
+        private void NextButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Calculate the total price
+            double totalPrice = ComputeTotalPrice(PageSize, ColorStatus, SelectedPages.Count, CopyCount);
+
+            // Create an instance of the insert_payment UserControl and pass the session ID along with totalPrice
+            insert_payment insertPaymentControl = new insert_payment(filePath: FilePath,
+                fileName: FileName,
+                pageSize: PageSize,
+                colorStatus: ColorStatus,
+                numberOfSelectedPages: NumberOfSelectedPages,
+                copyCount: CopyCount,
+                selectedPages: SelectedPages,
+                totalPrice: totalPrice); 
+
+            // Access the MainWindow instance
+            MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
+
+            if (mainWindow != null)
+            {
+                // Set the content to display the insert_payment page (assuming a ContentControl named MainContent)
+                mainWindow.MainContent.Content = insertPaymentControl;
+            }
+            else
+            {
+                // Handle error if MainWindow is null
+                MessageBox.Show("MainWindow instance is not available.");
+            }
+        }
+
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+           
+
+        }
     }
 }
