@@ -11,9 +11,7 @@ using iText.Layout.Element;
 
 namespace kiosk_snapprint
 {
-    /// <summary>
-    /// Interaction logic for PDFDisplay.xaml
-    /// </summary>
+    
     public partial class PDFDisplay : UserControl
     {
         

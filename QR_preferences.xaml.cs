@@ -50,6 +50,8 @@ namespace kiosk_snapprint
             NumberOfSelectedPages = numberOfSelectedPages;
             LoadPdf(FilePath);
 
+            Loaded += QR_preferences_Loaded;
+
             // Debug log the properties
             System.Diagnostics.Debug.WriteLine($"FilePath: {FilePath}");
             System.Diagnostics.Debug.WriteLine($"FileName: {FileName}");
@@ -145,13 +147,39 @@ namespace kiosk_snapprint
             }
 
         }
+        private void QR_preferences_Loaded(object sender, RoutedEventArgs e)
+        {
+            // Only show the modal if ColorStatus is not "colored"
+            if (!ColorStatus.Equals("colored", StringComparison.OrdinalIgnoreCase))
+            {
+                // Show the color confirmation modal during load
+                ColorConfirmationModal colorModal = new ColorConfirmationModal
+                {
+                    SelectedColorStatus = ColorStatus // Pass the current ColorStatus
+                };
+
+                bool? result = colorModal.ShowDialog();
+
+                if (result == true && !string.IsNullOrEmpty(colorModal.SelectedColorStatus))
+                {
+                    // Update ColorStatus based on the user's choice in the modal
+                    ColorStatus = colorModal.SelectedColorStatus;
+                }
+            }
+        }
 
         private void NextButton_Click(object sender, RoutedEventArgs e)
         {
             
 
             // Create an instance of the qrcode UserControl and pass the session ID
-             PricingQR pricingQR = new PricingQR();
+             PricingQR pricingQR = new PricingQR(filePath: FilePath,
+                fileName: FileName,
+                pageSize: PageSize,
+                colorStatus: ColorStatus,
+                numberOfSelectedPages: NumberOfSelectedPages,
+                copyCount: CopyCount,
+                selectedPages: SelectedPages);
 
             // Access the MainWindow instance
             MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
