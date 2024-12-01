@@ -170,8 +170,6 @@ namespace kiosk_snapprint
 
         private void NextButton_Click(object sender, RoutedEventArgs e)
         {
-            
-
             // Create an instance of the qrcode UserControl and pass the session ID
              PricingQR pricingQR = new PricingQR(filePath: FilePath,
                 fileName: FileName,

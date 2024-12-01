@@ -12,11 +12,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.IO;
+using System.Collections.ObjectModel;
+
 
 namespace kiosk_snapprint
 {
     /// <summary>
-    /// Interaction logic for insert_payment.xaml
+    /// Interaction logic for insert_payment.xamla
     /// </summary>
     public partial class insert_payment : UserControl
     {
@@ -32,6 +35,7 @@ namespace kiosk_snapprint
 
         public insert_payment(string filePath, string fileName, string pageSize, string colorStatus, int numberOfSelectedPages, int copyCount, List<int> selectedPages, double totalPrice)
         {
+            InitializeComponent();
             FilePath = filePath;
             FileName = fileName;
             PageSize = pageSize;
