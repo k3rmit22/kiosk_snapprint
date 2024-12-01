@@ -5,7 +5,7 @@
         Height="200" Width="400"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
-        ResizeMode="NoResize"
+        ResizeMode="NoResize" Visibility="Visible" WindowState="Normal"
         Background="White">
     <Grid>
         <TextBlock Text="We Detected that your Pdf File has an colored Content, Do you want to print in Colored or Greyscale?" 

@@ -9,6 +9,7 @@ namespace kiosk_snapprint
         public ColorConfirmationModal()
         {
             InitializeComponent();
+            System.Diagnostics.Debug.WriteLine("ColorConfirmationModal initialized.");
         }
 
         private void YesButton_Click(object sender, RoutedEventArgs e)

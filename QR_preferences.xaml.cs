@@ -51,6 +51,8 @@ namespace kiosk_snapprint
             LoadPdf(FilePath);
 
             Loaded += QR_preferences_Loaded;
+            System.Diagnostics.Debug.WriteLine("QR_preferences_Loaded triggered.");
+
 
             // Debug log the properties
             System.Diagnostics.Debug.WriteLine($"FilePath: {FilePath}");
@@ -149,14 +151,21 @@ namespace kiosk_snapprint
         }
         private void QR_preferences_Loaded(object sender, RoutedEventArgs e)
         {
-            // Only show the modal if ColorStatus is not "colored"
-            if (!ColorStatus.Equals("colored", StringComparison.OrdinalIgnoreCase))
+            // Only show the modal if ColorStatus equals "colored"
+            if (ColorStatus.Equals("colored", StringComparison.OrdinalIgnoreCase))
             {
                 // Show the color confirmation modal during load
                 ColorConfirmationModal colorModal = new ColorConfirmationModal
                 {
                     SelectedColorStatus = ColorStatus // Pass the current ColorStatus
                 };
+
+                // Set the owner of the modal to ensure it appears in front
+                Window mainWindow = Application.Current.MainWindow;
+                if (mainWindow != null)
+                {
+                    colorModal.Owner = mainWindow;
+                }
 
                 bool? result = colorModal.ShowDialog();
 
@@ -167,6 +176,8 @@ namespace kiosk_snapprint
                 }
             }
         }
+
+
 
         private void NextButton_Click(object sender, RoutedEventArgs e)
         {
