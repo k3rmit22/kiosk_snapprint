@@ -53,27 +53,35 @@ namespace kiosk_snapprint
                     {
                         if (pdfViewer != null)
                         {
-                            pdfViewer.Load(filePath);
+                            try
+                            {
+                                pdfViewer.Load(filePath); // Load the PDF using Syncfusion PdfViewer's Load method
+                            }
+                            catch (Exception ex)
+                            {
+                                ShowError($"Error loading PDF: {ex.Message}");
+                            }
                         }
                         else
                         {
-                            throw new InvalidOperationException("PDF Viewer instance is not initialized.");
+                            ShowError("PDF Viewer instance is not initialized.");
                         }
                     });
                 });
             }
             catch (Exception ex)
             {
-                // Handle exceptions (e.g., file not found, invalid format)
                 ShowError($"Error loading PDF: {ex.Message}");
             }
         }
 
         private void ShowError(string message)
         {
-            // Implement a mechanism to show errors, such as a message box or logging
+            // Display an error message only if the PDF failed to load
             MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
+
+
 
         // Method to populate checkboxes for each page in the PDF
         private void PopulatePageCheckboxes(string filePath)
@@ -137,28 +145,30 @@ namespace kiosk_snapprint
 
         private void PROCEED_Click(object sender, RoutedEventArgs e)
         {
-            // Get the number of selected pages
-            int numberOfSelectedPages = selectedPages.Count;
-
-            // Create an instance of the qrcode UserControl and pass the session I
-            QR_preferences QR_preferences = new QR_preferences(FilePath, FileName, PageSize, PageCount, Colorstatus, selectedPages, numberOfSelectedPages);
-
-            // Access the MainWindow instance
-            MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
-
-            if (mainWindow != null)
+            // Ensure the PDF is loaded before proceeding
+            if (pdfViewer.DocumentInfo != null)
             {
-                // Set the content to display the QR page (assuming a ContentControl named MainContent)
-                mainWindow.MainContent.Content = QR_preferences;
+                // Proceed with QR preferences after the PDF is ready
+                QR_preferences qrPreferences = new QR_preferences(FilePath, FileName, PageSize, PageCount, Colorstatus, selectedPages, selectedPages.Count);
+
+                // Set the MainContent in MainWindow
+                MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
+                if (mainWindow != null)
+                {
+                    mainWindow.MainContent.Content = qrPreferences;
+                }
+                else
+                {
+                    ShowError("MainWindow instance is not available.");
+                }
             }
             else
             {
-                // Handle error if MainWindow is null
-                MessageBox.Show("MainWindow instance is not available.");
+                // Handle PDF not loaded scenario if needed
+                ShowError("PDF is not loaded properly.");
             }
-
-
         }
+
     }
 
 }

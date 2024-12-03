@@ -11,6 +11,7 @@ using System.Windows.Media.Imaging;
 using QRCoder;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.SignalR.Client;
+using static kiosk_snapprint.qrcode;
 
 namespace kiosk_snapprint
 {
@@ -195,7 +196,8 @@ namespace kiosk_snapprint
 
         private void ShowError(string message)
         {
-            MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            //MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            
         }
 
         public class FileDetails

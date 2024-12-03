@@ -201,7 +201,7 @@
                 }
                 else
                 {
-                    MessageBox.Show("User canceled printing.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                   
                 }
 
                 pdfFileListView.SelectedItem = null;
