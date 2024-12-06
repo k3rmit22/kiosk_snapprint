@@ -5,6 +5,8 @@ VisualStudioVersion = 17.11.35303.130
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "kiosk_snapprint", "kiosk_snapprint.csproj", "{38FB1AA5-24EE-4EAA-BA3B-3913C1F52040}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KioskPrintingAPI", "..\..\..\Desktop\KioskPrintingApi-master\KioskPrintingAPI\KioskPrintingAPI.csproj", "{1D7FAFF0-02D2-42C6-B540-1C492894A923}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{38FB1AA5-24EE-4EAA-BA3B-3913C1F52040}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{38FB1AA5-24EE-4EAA-BA3B-3913C1F52040}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{38FB1AA5-24EE-4EAA-BA3B-3913C1F52040}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D7FAFF0-02D2-42C6-B540-1C492894A923}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D7FAFF0-02D2-42C6-B540-1C492894A923}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D7FAFF0-02D2-42C6-B540-1C492894A923}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D7FAFF0-02D2-42C6-B540-1C492894A923}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
