@@ -21,21 +21,23 @@ namespace kiosk_snapprint
     /// </summary>
     public partial class QR_preferences : UserControl
     {
+        private int count;
 
-        public string FilePath { get; set; }
-        public string FileName { get; set; }
-        public string PageSize { get; set; }
+        public string FilePath { get; private set; }
+        public string FileName { get; private set; }
+        public string PageSize { get; private set; }
+        public int PageCount { get; private set; }
+        public string ColorStatus { get; private set; }
+        public int NumberOfSelectedPages { get; private set; }
+        public int CopyCount { get; private set; }
+        public List<int> SelectedPages { get; private set; }
 
-        public int PageCount { get; set; }
+        public QR_preferences(string filePath, string fileName, string pageSize, int pageCount, string colorStatus, List<int> selectedPages, int numberOfSelectedPages)
+    :    this(filePath, fileName, pageSize, pageCount, colorStatus, selectedPages, numberOfSelectedPages, 1) // Default copyCount to 1
+        {
+        } 
 
-        public string ColorStatus { get; set; }
-        public List<int> SelectedPages { get; set; }
-        public int NumberOfSelectedPages { get; set; }
-
-        public int CopyCount { get; set; } = 1; 
-
-
-        public QR_preferences(string filePath, string fileName,  string pageSize, int pageCount, string colorStatus, List<int> selectedPages, int numberOfSelectedPages)
+        public QR_preferences(string filePath, string fileName,  string pageSize, int pageCount, string colorStatus, List<int> selectedPages, int numberOfSelectedPages, int copyCount)
         {
             InitializeComponent();
 
@@ -48,6 +50,8 @@ namespace kiosk_snapprint
             ColorStatus = colorStatus;
             SelectedPages = selectedPages;
             NumberOfSelectedPages = numberOfSelectedPages;
+            CopyCount = copyCount;
+
             LoadPdf(FilePath);
 
             Loaded += QR_preferences_Loaded;
@@ -74,6 +78,9 @@ namespace kiosk_snapprint
             }
 
         }
+
+      
+
         private void LoadPdf(string filePath)
         {
             try

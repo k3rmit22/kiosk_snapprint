@@ -152,19 +152,19 @@ namespace kiosk_snapprint
             if (mainWindow != null)
             {
                 // Create a new instance of PricingQR with the current properties
-                PricingQR pricingQRControl = new PricingQR(
+                QR_preferences preferences = new QR_preferences(
                     filePath: FilePath,
                     fileName: FileName,
                     pageSize: PageSize,
                     colorStatus: ColorStatus,
-                    numberOfSelectedPages: NumberOfSelectedPages,
-                    copyCount: CopyCount,
+                    numberOfSelectedPages: NumberOfSelectedPages,   
+                    copyCount: CopyCount,                
                     selectedPages: SelectedPages,
                     pageCount: Pagecount
                 );
 
                 // Set the content to the PricingQR UserControl
-                mainWindow.MainContent.Content = pricingQRControl;
+                mainWindow.MainContent.Content = preferences;
             }
             else
             {

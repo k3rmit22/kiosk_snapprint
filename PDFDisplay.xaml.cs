@@ -245,12 +245,19 @@ namespace kiosk_snapprint
         }
 
 
-    private void PROCEED_Click(object sender, RoutedEventArgs e)
+        private void PROCEED_Click(object sender, RoutedEventArgs e)
         {
             // Ensure the PDF is loaded before proceeding
             if (pdfViewer.DocumentInfo != null)
             {
-                // Proceed with QR preferences after the PDF is ready
+                // Validation: Ensure at least one page is selected
+                if (selectedPages.Count == 0)
+                {
+                    ShowError("Please select at least one page before proceeding.");
+                    return;
+                }
+
+                // Proceed with QR preferences after validation
                 QR_preferences qrPreferences = new QR_preferences(FilePath, FileName, PageSize, PageCount, Colorstatus, selectedPages, selectedPages.Count);
 
                 // Set the MainContent in MainWindow
@@ -270,6 +277,7 @@ namespace kiosk_snapprint
                 ShowError("PDF is not loaded properly.");
             }
         }
+
 
         private void Back_Click(object sender, RoutedEventArgs e)
         {
