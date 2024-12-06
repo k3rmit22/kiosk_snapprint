@@ -129,26 +129,36 @@ namespace kiosk_snapprint
             CopyCountTextBox.Text = CopyCount.ToString();
         }
 
-        private void BackButton_Click(object sender, RoutedEventArgs e)
+        private async void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            // Access the MainWindow instance
             MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
 
             if (mainWindow != null)
             {
-                // Create a new instance of PDFDisplay and pass relevant data
-                PDFDisplay pdfDisplay = new PDFDisplay(FilePath, FileName, PageSize, PageCount, ColorStatus);
+                PDFDisplay pdfDisplay;
 
-                // Set the content of MainContent to display PDFDisplay
+                if (mainWindow.MainContent.Content is PDFDisplay existingPdfDisplay)
+                {
+                    pdfDisplay = existingPdfDisplay;
+                    pdfDisplay.UpdatePdfDetails(FilePath, FileName, PageSize, PageCount, ColorStatus);
+                }
+                else
+                {
+                    pdfDisplay = new PDFDisplay(FilePath, FileName, PageSize, PageCount, ColorStatus);
+                }
+
+                // Reload the PDF explicitly
+                await pdfDisplay.LoadPdfAsync(FilePath);
+
                 mainWindow.MainContent.Content = pdfDisplay;
             }
             else
             {
-                // Handle error if MainWindow is not available
                 MessageBox.Show("MainWindow instance is not available.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
         }
+
+
         private void QR_preferences_Loaded(object sender, RoutedEventArgs e)
         {
             // Only show the modal if ColorStatus equals "colored"
@@ -182,9 +192,11 @@ namespace kiosk_snapprint
         private void NextButton_Click(object sender, RoutedEventArgs e)
         {
             // Create an instance of the qrcode UserControl and pass the session ID
-             PricingQR pricingQR = new PricingQR(filePath: FilePath,
+             PricingQR pricingQR = new PricingQR(      
+                filePath: FilePath,
                 fileName: FileName,
                 pageSize: PageSize,
+                pageCount: PageCount,
                 colorStatus: ColorStatus,
                 numberOfSelectedPages: NumberOfSelectedPages,
                 copyCount: CopyCount,

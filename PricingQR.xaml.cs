@@ -5,16 +5,18 @@ using System.Windows.Controls;
 
 namespace kiosk_snapprint
 {
-   
     public partial class PricingQR : UserControl
     {
         public string FilePath { get; private set; }
         public string FileName { get; private set; }
         public string PageSize { get; private set; }
+        public int Pagecount { get; private set; }
         public string ColorStatus { get; private set; }
         public int NumberOfSelectedPages { get; private set; }
         public int CopyCount { get; private set; }
         public List<int> SelectedPages { get; private set; }
+
+        public double TotalPrice { get; set; }
 
         private readonly Dictionary<string, int> ColorStatusValues = new Dictionary<string, int>
         {
@@ -30,7 +32,7 @@ namespace kiosk_snapprint
         };
 
         public PricingQR(string filePath, string fileName, string pageSize, string colorStatus,
-            int numberOfSelectedPages, int copyCount, List<int> selectedPages)
+            int numberOfSelectedPages, int copyCount, List<int> selectedPages, int pageCount)
         {
             InitializeComponent();
 
@@ -38,12 +40,13 @@ namespace kiosk_snapprint
             FilePath = filePath;
             FileName = fileName;
             PageSize = pageSize;
+            Pagecount = pageCount;
             ColorStatus = colorStatus;
             NumberOfSelectedPages = numberOfSelectedPages;
             CopyCount = copyCount;
             SelectedPages = selectedPages;
 
-            
+            // Load summary and display data
             LoadSummary(FileName, PageSize, ColorStatus, SelectedPages, CopyCount);
         }
 
@@ -65,9 +68,9 @@ namespace kiosk_snapprint
                 selected_pages_label.Text = string.Join(", ", selectedPages);
             }
 
-            // Compute the total price
-            double totalPrice = ComputeTotalPrice(normalizedPageSize, normalizedColorStatus, selectedPages.Count, copyCount);
-            System.Diagnostics.Debug.WriteLine($"totalprice: {totalPrice}");
+            // Compute the total price using your logic and set the TotalPrice property
+            double totalPrice = ComputeTotalPrice(normalizedColorStatus, selectedPages.Count, copyCount);
+            TotalPrice = totalPrice;  // Set TotalPrice property
 
             // Display the total price
             total_label.Text = $"{totalPrice}";
@@ -85,44 +88,53 @@ namespace kiosk_snapprint
             return colorStatus?.Trim().ToLower();
         }
 
-        private double ComputeTotalPrice(string pageSize, string colorStatus, int numberOfSelectedPages, int copyCount)
+        private double ComputeTotalPrice(string colorStatus, int numberOfSelectedPages, int copyCount)
         {
-            // Get the numeric values for color status and page size
-            if (ColorStatusValues.TryGetValue(colorStatus, out int colorValue) &&
-                PageSizeValues.TryGetValue(pageSize, out int pageSizeValue))
+            // Log the incoming color status for debugging purposes
+            System.Diagnostics.Debug.WriteLine($"Computing total price for color status: {colorStatus}");
+
+            // Check if the colorStatus exists in the dictionary
+            if (ColorStatusValues.TryGetValue(colorStatus, out int colorValue))
             {
-                // Formula: (Page Size Value + Color Value) * Number of Selected Pages * Copy Count
-                double totalPrice = (pageSizeValue + colorValue) * numberOfSelectedPages * copyCount;
+                // Formula: Color Value * Number of Selected Pages * Copy Count
+                double totalPrice = colorValue * numberOfSelectedPages * copyCount;
+
+                // Log the computed price for debugging purposes
+                System.Diagnostics.Debug.WriteLine($"Total Price: {totalPrice}");
+
                 return totalPrice;
             }
             else
             {
-                // Return 0 if either the color status or page size is invalid
+                // Log an error or warning if the colorStatus is not found
+                System.Diagnostics.Debug.WriteLine($"Invalid color status: {colorStatus}. Returning 0.0 as default.");
+
+                // Return 0.0 or handle a default value if the color status is invalid
                 return 0.0;
             }
         }
 
         private void NextButton_Click(object sender, RoutedEventArgs e)
         {
-            // Calculate the total price
-            double totalPrice = ComputeTotalPrice(PageSize, ColorStatus, SelectedPages.Count, CopyCount);
-
-            // Create an instance of the insert_payment UserControl and pass the session ID along with totalPrice
-            insert_payment insertPaymentControl = new insert_payment(filePath: FilePath,
+            // Create an instance of the insert_payment UserControl and pass the data, including the totalPrice
+            insert_payment insertPaymentControl = new insert_payment(
+                filePath: FilePath,
                 fileName: FileName,
                 pageSize: PageSize,
+                pageCount: Pagecount,
                 colorStatus: ColorStatus,
                 numberOfSelectedPages: NumberOfSelectedPages,
                 copyCount: CopyCount,
                 selectedPages: SelectedPages,
-                totalPrice: totalPrice); 
+                totalPrice: TotalPrice // Pass the totalPrice to insert_payment
+            );
 
             // Access the MainWindow instance
             MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
 
             if (mainWindow != null)
             {
-                // Set the content to display the insert_payment page (assuming a ContentControl named MainContent)
+                // Set the content to display the insert_payment page
                 mainWindow.MainContent.Content = insertPaymentControl;
             }
             else
@@ -134,8 +146,31 @@ namespace kiosk_snapprint
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-           
+            // Access the MainWindow instance
+            MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
 
+            if (mainWindow != null)
+            {
+                // Create a new instance of PricingQR with the current properties
+                PricingQR pricingQRControl = new PricingQR(
+                    filePath: FilePath,
+                    fileName: FileName,
+                    pageSize: PageSize,
+                    colorStatus: ColorStatus,
+                    numberOfSelectedPages: NumberOfSelectedPages,
+                    copyCount: CopyCount,
+                    selectedPages: SelectedPages,
+                    pageCount: Pagecount
+                );
+
+                // Set the content to the PricingQR UserControl
+                mainWindow.MainContent.Content = pricingQRControl;
+            }
+            else
+            {
+                // Handle error if MainWindow is null
+                MessageBox.Show("MainWindow instance is not available.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

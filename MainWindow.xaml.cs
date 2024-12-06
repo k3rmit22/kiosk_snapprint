@@ -17,6 +17,7 @@ namespace kiosk_snapprint
     {
         // Hooking for keyboard
         private static IntPtr _hookID = IntPtr.Zero;
+        private PDFDisplay pdfDisplayInstance;
 
         public MainWindow()
         {
@@ -24,11 +25,30 @@ namespace kiosk_snapprint
             InitializeComponent();
             Loaded += MainWindow_Loaded;
             MainContent.Content = new HomeUserControl();
-       
+            pdfDisplayInstance = null;
+
 
         }
 
-       
+        public void ShowPdfDisplay(string filePath, string fileName, string pageSize, int pageCount, string colorstatus)
+        {
+            if (pdfDisplayInstance == null)
+            {
+                pdfDisplayInstance = new PDFDisplay(filePath, fileName, pageSize, pageCount, colorstatus);
+            }
+
+            MainContent.Content = pdfDisplayInstance; // Navigate to the PDF display
+        }
+
+        public void NavigateBackToPdfDisplay()
+        {
+            if (pdfDisplayInstance != null)
+            {
+                MainContent.Content = pdfDisplayInstance;
+            }
+        }
+
+
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
