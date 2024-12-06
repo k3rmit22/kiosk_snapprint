@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Diagnostics;  // Add this namespace
+using System.Diagnostics;
 
 namespace kiosk_snapprint
 {
@@ -17,6 +17,9 @@ namespace kiosk_snapprint
 
         // PdfViewerControl to display the PDF
         private PdfViewerControl _pdfViewerControl;
+
+        // Private field to hold the file bytes
+        private byte[] _fileBytes;
 
         public uniquePreferences()
         {
@@ -43,11 +46,14 @@ namespace kiosk_snapprint
             ColorMode = colorMode;
             SelectedPages = selectedPages;
 
+            // Store the file bytes in the private field
+            _fileBytes = fileBytes;
+
             // Display the PDF in PdfViewerControl
-            if (fileBytes != null && fileBytes.Length > 0)
+            if (_fileBytes != null && _fileBytes.Length > 0)
             {
                 Debug.WriteLine("Loading PDF into PdfViewerControl...");
-                MemoryStream pdfStream = new MemoryStream(fileBytes);
+                MemoryStream pdfStream = new MemoryStream(_fileBytes);
                 _pdfViewerControl.Load(pdfStream);
             }
             else
@@ -57,7 +63,11 @@ namespace kiosk_snapprint
             }
         }
 
-
+        // Method to access the stored file bytes
+        public byte[] GetFileBytes()
+        {
+            return _fileBytes;
+        }
 
         private void IncreaseCopyCount_Click(object sender, RoutedEventArgs e)
         {
@@ -89,7 +99,35 @@ namespace kiosk_snapprint
         private void NextButton_Click(object sender, RoutedEventArgs e)
         {
             Debug.WriteLine("Next button clicked.");
-            // Handle Next button click
+
+            // Get the copy count from the CopyCountTextBox
+            int copyCount = int.Parse(CopyCountTextBox.Text);
+            Debug.WriteLine($"Copy Count: {copyCount}");
+
+            // Create the uniquePricing control
+            uniquePricing pricingPage = new uniquePricing(
+                FileName,
+                PageSize,
+                ColorMode,
+                SelectedPages,
+                copyCount,
+                GetFileBytes()
+            );
+
+            // Access the MainWindow and set the content
+            MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
+
+            if (mainWindow != null)
+            {
+                // Set the content of MainContent to the new UserControl (uniquePricing)
+                mainWindow.MainContent.Content = pricingPage;
+            }
+            else
+            {
+                // Handle error if MainWindow is null
+                MessageBox.Show("MainWindow instance is not available.");
+            }
         }
+
     }
 }

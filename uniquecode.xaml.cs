@@ -61,7 +61,7 @@ namespace kiosk_snapprint
         {
             try
             {
-                string apiUrl = $"https://localhost:5081/api/Upload/GetFile/{uniqueCode}";
+                string apiUrl = $"https://snapprint-dec7h3fthscthwcx.canadacentral-01.azurewebsites.net/api/Upload/GetFile/{uniqueCode}";
                 using (HttpClient httpClient = new HttpClient())
                 {
                     HttpResponseMessage response = await httpClient.GetAsync(apiUrl);

@@ -29,23 +29,18 @@
             <!-- Preferences Header -->
             <TextBlock Text="Preferences" FontSize="50" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,40" />
 
-            <!-- File Name -->
-
-
-            <!-- Print All Pages Checkbox -->
-            <CheckBox x:Name="PrintAllPagesCheckBox" Content="Print All Pages" FontSize="24" HorizontalAlignment="Center" Margin="0,0,0,20" Checked="PrintAllPagesCheckBox_Checked"  Unchecked="PrintAllPagesCheckBox_Unchecked" />
-
-
             <!-- Select Page to Print -->
-            <TextBlock Text="Select a page to print" FontSize="24" HorizontalAlignment="Center" Margin="0,0,0,20" FontWeight="Bold" />
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,40">
-                <ComboBox x:Name="PageSelectionComboBox" Width="300" Height="42" SelectionChanged="PageSelectionComboBox_SelectionChanged" FontSize="24">
-                    <!-- ComboBox items will be populated dynamically in the code-behind -->
-                </ComboBox>
-            </StackPanel>
+            <TextBlock Text="Select pages to print" FontSize="24" HorizontalAlignment="Center" Margin="0,0,0,20" FontWeight="Bold" />
+
+            <!-- StackPanel for checkboxes -->
+            <ScrollViewer Width="279" Height="184" Margin="10">
+                <StackPanel x:Name="PageSelectionStackPanel">
+                    <!-- Dynamically generated checkboxes will be added here -->
+                </StackPanel>
+            </ScrollViewer>
 
         </StackPanel>
 
-        <Button x:Name="ProceedButton" Content="       NEXT                 " Height="60" FontSize="24" Margin="312,0,0,0" FontWeight="Bold" Click="PROCEED_Click" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Width="165" />
+        <Button x:Name="ProceedButton" Content="       NEXT                 " Height="60" FontSize="24" Margin="312,628,0,0" FontWeight="Bold" Click="PROCEED_Click" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Width="165" />
     </Grid>
 </UserControl>
