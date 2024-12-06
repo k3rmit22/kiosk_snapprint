@@ -13,6 +13,7 @@
     <None Remove="insert-coin.png" />
     <None Remove="passcode.png" />
     <None Remove="pdficon.png" />
+    <None Remove="printing_gif.gif" />
     <None Remove="scanner.png" />
     <None Remove="white-back-icon-17.jpg" />
     <None Remove="wow.png" />
@@ -30,6 +31,7 @@
     <PackageReference Include="Syncfusion.PdfViewer.WPF" Version="27.1.58" />
     <PackageReference Include="System.IO.Ports" Version="9.0.0" />
     <PackageReference Include="System.Windows.Forms.Ribbon35" Version="3.5.8" />
+    <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,6 +39,9 @@
     <Content Include="insert-coin.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="printing_gif.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <Resource Include="passcode.png" />
     <Resource Include="pdficon.png" />
     <Resource Include="scanner.png" />
