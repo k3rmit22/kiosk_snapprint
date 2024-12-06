@@ -1,31 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
+using System.IO.Ports;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.IO;
-using System.Collections.ObjectModel;
-using System.IO.Ports;
-
-
 
 namespace kiosk_snapprint
 {
-    /// <summary>
-    /// Interaction logic for insert_payment.xamla
-    /// </summary>
-    public partial class insert_payment : UserControl
+    public partial class insert_payment : UserControl, IDisposable
     {
-        
         public string FilePath { get; private set; }
         public string FileName { get; private set; }
         public string PageSize { get; private set; }
@@ -36,6 +19,8 @@ namespace kiosk_snapprint
         public List<int> SelectedPages { get; private set; }
         public double TotalPrice { get; private set; }
 
+        private SerialPort _serialPort;
+        private int _insertedAmount; // Tracks the inserted amount
 
         public insert_payment(string filePath, string fileName, string pageSize, int pageCount,
                               string colorStatus, int numberOfSelectedPages, int copyCount,
@@ -43,8 +28,7 @@ namespace kiosk_snapprint
         {
             InitializeComponent();
 
-            
-            // Store the passed values
+            // Store passed values
             FilePath = filePath;
             FileName = fileName;
             PageSize = pageSize;
@@ -55,60 +39,146 @@ namespace kiosk_snapprint
             SelectedPages = selectedPages;
             TotalPrice = totalPrice;
 
-
-            // For debugging purposes, you can print out the values (optional)
-            System.Diagnostics.Debug.WriteLine($"FilePath: {FilePath}");
-            System.Diagnostics.Debug.WriteLine($"FileName: {FileName}");
-            System.Diagnostics.Debug.WriteLine($"PageSize: {PageSize}");
-            System.Diagnostics.Debug.WriteLine($"PageCount: {PageCount}");
-            System.Diagnostics.Debug.WriteLine($"ColorStatus: {ColorStatus}");
-            System.Diagnostics.Debug.WriteLine($"NumberOfSelectedPages: {NumberOfSelectedPages}");
-            System.Diagnostics.Debug.WriteLine($"CopyCount: {CopyCount}");
-            System.Diagnostics.Debug.WriteLine($"SelectedPages: {string.Join(", ", SelectedPages)}");
-            System.Diagnostics.Debug.WriteLine($"TotalPrice: {TotalPrice}");
-
             Loadsummary(FileName, TotalPrice);
+            InitializeSerialPort();
+            ResetInsertedAmount(); // Initialize the reset logic
+            this.Unloaded += UserControl_Unloaded;
+        }
 
+        private void ResetInsertedAmount()
+        {
+            try
+            {
+                _insertedAmount = 0; // Reset the C# application state
+                inserted_amount_label.Text = $"{_insertedAmount:F2}";
+
+                if (_serialPort != null && _serialPort.IsOpen)
+                {
+                    _serialPort.WriteLine("RESET"); // Send reset command to Arduino
+                    Debug.WriteLine("Reset command sent to Arduino.");
+                }
+                else
+                {
+                    Debug.WriteLine("Serial port is not open. Cannot send reset command.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error during reset: {ex.Message}");
+            }
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            // Create a new instance of PricingQR, passing the necessary properties
-            PricingQR pricingQRControl = new PricingQR(
-                filePath: FilePath,
-                fileName: FileName,
-                pageSize: PageSize,
-                colorStatus: ColorStatus,
-                numberOfSelectedPages: NumberOfSelectedPages,
-                copyCount: CopyCount,
-                selectedPages: SelectedPages,
-                pageCount: PageCount // Ensure this property is correctly passed
+            HomeUserControl home = new HomeUserControl(
+               
             );
 
-            // Access the MainWindow instance and set the content to PricingQR
             MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
 
             if (mainWindow != null)
             {
-                mainWindow.MainContent.Content = pricingQRControl;
+                mainWindow.MainContent.Content = home;
             }
             else
             {
-                // Handle error if MainWindow is null
                 MessageBox.Show("MainWindow instance is not available.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-
-
         private void Loadsummary(string fileName, double totalPrice)
         {
-            // Ensure name_label and total_label are valid UI elements
-            if (name_label != null)
-                name_label.Text = fileName;
-
-            if (total_label != null)
-                total_label.Text = $"{totalPrice:F2}"; // Display with 2 decimal places
+            name_label.Text = fileName ?? "Unknown File";
+            total_label.Text = $"{totalPrice:F2}";
         }
+
+        private void InitializeSerialPort()
+        {
+            try
+            {
+                _serialPort = new SerialPort("COM8", 115200); // Adjust COM port as needed
+                _serialPort.DataReceived += SerialPort_DataReceived;
+
+                if (!_serialPort.IsOpen)
+                {
+                    _serialPort.Open();
+                    Debug.WriteLine("Serial port connected successfully.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to connect to the serial port: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Debug.WriteLine($"Error: {ex.Message}");
+            }
+        }
+
+        private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+            try
+            {
+                string data = _serialPort.ReadLine().Trim();
+
+                if (int.TryParse(data, out int amount))
+                {
+                    if (amount >= 0)
+                    {
+                        Dispatcher.Invoke(() =>
+                        {
+                            _insertedAmount = amount;
+                            inserted_amount_label.Text = $"{_insertedAmount:F2}";
+                            Debug.WriteLine($"Amount updated: {_insertedAmount}");
+
+                           
+                        });
+                    }
+                }
+                else
+                {
+                    Debug.WriteLine($"Invalid data received: {data}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error reading serial port data: {ex.Message}");
+            }
+        }
+
+       
+       
+
+
+        public void Dispose()
+        {
+            if (_serialPort != null)
+            {
+                try
+                {
+                    _serialPort.DataReceived -= SerialPort_DataReceived;
+
+                    if (_serialPort.IsOpen)
+                    {
+                        _serialPort.Close();
+                    }
+
+                    _serialPort.Dispose();
+                    _serialPort = null;
+
+                    Debug.WriteLine("Serial port disposed and event handler removed.");
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error disposing serial port: {ex.Message}");
+                }
+            }
+        }
+
+        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("UserControl_Unloaded triggered.");
+            Dispose();
+        }
+
+        
+
     }
 }
