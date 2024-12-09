@@ -1,0 +1,57 @@
+﻿<UserControl x:Class="kiosk_snapprint.uniquePricing"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <!-- Define a style for the labels -->
+        <Style x:Key="LabelStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+
+        <!-- Define a style for the values -->
+        <Style x:Key="ValueStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Margin="20">
+        <!-- Changed Padding to Margin here -->
+        <!-- Using Grid to layout the information in two columns -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Labels -->
+        <TextBlock Text="File Name:" Grid.Row="0" Grid.Column="0" Style="{StaticResource LabelStyle}"/>
+        <TextBlock Text="Page Size:" Grid.Row="1" Grid.Column="0" Style="{StaticResource LabelStyle}"/>
+        <TextBlock Text="Color Mode:" Grid.Row="2" Grid.Column="0" Style="{StaticResource LabelStyle}"/>
+        <TextBlock Text="Selected Pages:" Grid.Row="3" Grid.Column="0" Style="{StaticResource LabelStyle}"/>
+        <TextBlock Text="Copy Count:" Grid.Row="4" Grid.Column="0" Style="{StaticResource LabelStyle}"/>
+        <TextBlock Text="File Size:" Grid.Row="5" Grid.Column="0" Style="{StaticResource LabelStyle}"/>
+
+        <!-- Values -->
+        <TextBlock x:Name="FileNameLabel" Grid.Row="0" Grid.Column="1" Style="{StaticResource ValueStyle}"/>
+        <TextBlock x:Name="PageSizeLabel" Grid.Row="1" Grid.Column="1" Style="{StaticResource ValueStyle}"/>
+        <TextBlock x:Name="ColorModeLabel" Grid.Row="2" Grid.Column="1" Style="{StaticResource ValueStyle}"/>
+        <TextBlock x:Name="SelectedPagesLabel" Grid.Row="3" Grid.Column="1" Style="{StaticResource ValueStyle}"/>
+        <TextBlock x:Name="CopyCountLabel" Grid.Row="4" Grid.Column="1" Style="{StaticResource ValueStyle}"/>
+        <TextBlock x:Name="FileSizeLabel" Grid.Row="5" Grid.Column="1" Style="{StaticResource ValueStyle}"/>
+    </Grid>
+</UserControl>
