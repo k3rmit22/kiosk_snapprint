@@ -20,14 +20,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Aspose.PDF" Version="24.11.0" />
     <PackageReference Include="itext7" Version="9.0.0" />
     <PackageReference Include="iTextSharp" Version="5.5.13.4" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.0" />
-    <PackageReference Include="PdfiumViewer" Version="2.13.0" />
     <PackageReference Include="PdfiumViewer.Core" Version="1.0.4" />
     <PackageReference Include="PdfiumViewer.Native.x86.v8-xfa" Version="2018.4.8.256" />
     <PackageReference Include="PdfiumViewer.Native.x86_64.v8-xfa" Version="2018.4.8.256" />
     <PackageReference Include="QRCoder" Version="1.6.0" />
+    <PackageReference Include="Syncfusion.Pdf.WinForms" Version="27.2.5" />
+    <PackageReference Include="Syncfusion.Pdf.Wpf" Version="27.2.5" />
     <PackageReference Include="Syncfusion.PdfViewer.WPF" Version="27.1.58" />
     <PackageReference Include="System.IO.Ports" Version="9.0.0" />
     <PackageReference Include="System.Windows.Forms.Ribbon35" Version="3.5.8" />
@@ -39,9 +41,9 @@
     <Content Include="insert-coin.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <EmbeddedResource Include="printing_gif.gif">
+    <Resource Include="printing_gif.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
+    </Resource>
     <Resource Include="passcode.png" />
     <Resource Include="pdficon.png" />
     <Resource Include="scanner.png" />

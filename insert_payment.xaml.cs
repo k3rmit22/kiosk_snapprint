@@ -110,16 +110,21 @@ namespace kiosk_snapprint
             }
         }
 
+        private bool paymentCompleted = false; 
+
         private void CheckForPaymentCompletion()
         {
-            // Check if the inserted amount meets or exceeds the total price
-            if (_insertedAmount >= TotalPrice)
+            // Check if the inserted amount meets or exceeds the total price and payment hasn't been completed already
+            if (_insertedAmount >= TotalPrice && !paymentCompleted)
             {
+                // Mark payment as completed to prevent multiple triggers
+                paymentCompleted = true;
+
                 // Send command to servo to move to 180 degrees
                 SendServoCommand("servo0");
 
-                // Proceed to the next step
-                NavigateToNextUserControl();
+                // Proceed to the next step (navigate to the printing window)
+                NavigateToPrintingTryWindow();
             }
         }
 
@@ -169,22 +174,48 @@ namespace kiosk_snapprint
             total_label.Text = $"{totalPrice:F2}";
         }
 
-        private void NavigateToNextUserControl()
+        private async void NavigateToPrintingTryWindow()
         {
-            // Navigate to the next user control (printing screen)
-            loading_printing nextStepControl = new loading_printing();
-
-            MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
-
-            if (mainWindow != null)
+            try
             {
-                mainWindow.MainContent.Content = nextStepControl;
+                // Introduce a 10-second delay
+                await Task.Delay(10000); // 10,000 milliseconds = 10 seconds
+
+                // Create a new instance of the printing_try window
+                printing_try printingWindow = new printing_try(
+                    filePath: FilePath,
+                    fileName: FileName,
+                    pageSize: PageSize,
+                    pageCount: PageCount,
+                    colorStatus: ColorStatus,
+                    numberOfSelectedPages: NumberOfSelectedPages,
+                    copyCount: CopyCount,
+                    selectedPages: SelectedPages,
+                    totalPrice: TotalPrice
+                );
+
+                // Show the printing_try window
+                printingWindow.Show();
+
+                // Optionally hide the current main window to keep the process focused
+                Application.Current.MainWindow.Hide();
+
+                // Close the printing_try window after the process is complete
+                printingWindow.Closed += (s, e) =>
+                {
+                    Application.Current.MainWindow.Show();
+                };
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("MainWindow instance is not available.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"An error occurred while navigating to the printing window: {ex.Message}",
+                                "Error",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Error);
             }
         }
+
+
 
         private void ResetInsertedAmount()
         {
