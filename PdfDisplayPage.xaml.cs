@@ -81,24 +81,67 @@ namespace kiosk_snapprint
                             if (obj != null && obj.Length > 0)
                             {
                                 var colorSpace = obj.Get(PdfName.COLORSPACE);
-                                if (colorSpace != null && colorSpace.ToString().Contains("DeviceRGB"))
+                                if (colorSpace != null)
                                 {
-                                    return "Colored";
+                                    var resolvedColorSpace = ResolveColorSpace(colorSpace);
+                                    if (IsColor(resolvedColorSpace))
+                                    {
+                                        Console.WriteLine($"Page {i}: Color detected in image or graphics.");
+                                        return "Colored";
+                                    }
                                 }
                             }
                         }
                     }
 
                     var contentBytes = reader.GetPageContent(i);
-                    string content = System.Text.Encoding.Default.GetString(contentBytes);
-                    if (content.Contains("rg") || content.Contains("RG"))
+                    string content = System.Text.Encoding.ASCII.GetString(contentBytes);
+
+                    if (ContainsColorOperators(content))
                     {
+                        Console.WriteLine($"Page {i}: Color detected in text or vector graphics.");
                         return "Colored";
                     }
                 }
             }
+            return "Greyscale"; // Default to Grayscale if no color is detected
+        }
 
-            return "Grayscale";
+        // Helper method to resolve color spaces
+        private string ResolveColorSpace(PdfObject colorSpaceObj)
+        {
+            if (colorSpaceObj.IsIndirect())
+            {
+                colorSpaceObj = PdfReader.GetPdfObject(colorSpaceObj);
+            }
+
+            if (colorSpaceObj.IsArray())
+            {
+                var colorArray = (PdfArray)colorSpaceObj;
+                return colorArray[0].ToString();
+            }
+
+            return colorSpaceObj.ToString();
+        }
+
+        // Helper method to determine if a color space indicates color
+        private bool IsColor(string colorSpace)
+        {
+            return colorSpace.Contains("RGB") ||
+                   colorSpace.Contains("CMYK") ||
+                   colorSpace.Contains("DeviceN") ||
+                   colorSpace.Contains("ICCBased") ||
+                   colorSpace.Contains("Separation") ||
+                   colorSpace.Contains("Pattern");
+        }
+
+        // Helper method to check for color operators in the PDF content
+        private bool ContainsColorOperators(string content)
+        {
+            return content.Contains("rg") || content.Contains("RG") ||
+                   content.Contains("k") || content.Contains("K") ||
+                   content.Contains("cs") || content.Contains("CS") ||
+                   content.Contains("sc") || content.Contains("SC");
         }
 
         private string DetectPageSize(byte[] fileBytes)
@@ -131,7 +174,7 @@ namespace kiosk_snapprint
             CheckBox selectAllCheckBox = new CheckBox
             {
                 Content = "Select All Pages",
-                FontSize = 15,
+                FontSize = 25,
                 Tag = "SelectAll"
             };
 
@@ -145,7 +188,7 @@ namespace kiosk_snapprint
                 CheckBox pageCheckBox = new CheckBox
                 {
                     Content = $"Page {i}",
-                    FontSize = 15,
+                    FontSize = 25,
                     Tag = i
                 };
 
@@ -237,13 +280,21 @@ namespace kiosk_snapprint
 
         private void PROCEED_Click(object sender, RoutedEventArgs e)
         {
+            if (selectedPages.Count == 0)
+            {
+                MessageBox.Show("Please select at least one page before proceeding.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return; // Don't proceed if no pages are selected
+            }
+
+
             int selectedPagesCount = selectedPages.Count > 0 ? selectedPages.Count : 1;
             Console.WriteLine($"Selected Pages: {selectedPagesCount}");
 
             byte[] fileBytes = _pdfStream.ToArray();
 
             uniquePreferences preferencesPage = new uniquePreferences();
-            preferencesPage.SetPreferences(_fileName, _pageSize, _colorMode, selectedPagesCount, fileBytes);
+            preferencesPage.SetPreferences(_fileName, _pageSize, _colorMode, selectedPages, fileBytes);
+
 
             var mainWindow = (MainWindow)Application.Current.MainWindow;
             mainWindow.MainContent.Content = preferencesPage;
@@ -254,7 +305,7 @@ namespace kiosk_snapprint
             _pdfStream?.Dispose();
         }
 
-        
+
 
         private void PrintAllPagesCheckBox_Unchecked(object sender, RoutedEventArgs e)
         {

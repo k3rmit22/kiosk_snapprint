@@ -1,5 +1,6 @@
 ﻿using Syncfusion.Windows.PdfViewer;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,8 +14,8 @@ namespace kiosk_snapprint
         public string FileName { get; set; }
         public string PageSize { get; set; }
         public string ColorMode { get; set; }
-        public int SelectedPages { get; set; }
-
+        public List<int> SelectedPages { get; set; }
+        private PricingQR _pricingQR;
         // PdfViewerControl to display the PDF
         private PdfViewerControl _pdfViewerControl;
 
@@ -31,13 +32,13 @@ namespace kiosk_snapprint
         }
 
         // Method to set preferences and display the PDF
-        public void SetPreferences(string fileName, string pageSize, string colorMode, int selectedPages, byte[] fileBytes)
+        public void SetPreferences(string fileName, string pageSize, string colorMode, List<int> selectedPages, byte[] fileBytes)
         {
             Debug.WriteLine($"SetPreferences called with the following details:");
             Debug.WriteLine($"FileName: {fileName}");
             Debug.WriteLine($"PageSize: {pageSize}");
             Debug.WriteLine($"ColorMode: {colorMode}");
-            Debug.WriteLine($"SelectedPages: {selectedPages}");
+            Debug.WriteLine($"SelectedPages: {string.Join(", ", selectedPages)}");
             Debug.WriteLine($"FileBytes Length: {fileBytes?.Length ?? 0}");
 
             // Assign values to properties
@@ -68,66 +69,125 @@ namespace kiosk_snapprint
         {
             return _fileBytes;
         }
-
         private void IncreaseCopyCount_Click(object sender, RoutedEventArgs e)
         {
-            int currentCount = int.Parse(CopyCountTextBox.Text);
-            Debug.WriteLine($"Increase copy count: {currentCount} -> {currentCount + 1}");
-            CopyCountTextBox.Text = (currentCount + 1).ToString();
-        }
-
-        private void DecreaseCopyCount_Click(object sender, RoutedEventArgs e)
-        {
-            int currentCount = int.Parse(CopyCountTextBox.Text);
-            if (currentCount > 1)
+            if (int.TryParse(CopyCountTextBox.Text, out int currentCount) && currentCount < 10)
             {
-                Debug.WriteLine($"Decrease copy count: {currentCount} -> {currentCount - 1}");
-                CopyCountTextBox.Text = (currentCount - 1).ToString();
+                UpdateCopyCount(1);
             }
             else
             {
-                Debug.WriteLine("Copy count cannot go below 1.");
+                MessageBox.Show("The maximum copy count is 10.", "Limit Reached", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
+
+        // Decrease the copy count
+        private void DecreaseCopyCount_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateCopyCount(-1);
+        }
+
+        // Helper method to update the copy count
+        private void UpdateCopyCount(int increment)
+        {
+            if (int.TryParse(CopyCountTextBox.Text, out int currentCount) && currentCount > 0)
+            {
+                currentCount += increment;
+                if (currentCount < 1) currentCount = 1;  // Ensure the count is not less than 1
+                Debug.WriteLine($"Updated copy count: {currentCount}");
+                CopyCountTextBox.Text = currentCount.ToString();
+            }
+            else
+            {
+                Debug.WriteLine("Invalid copy count.");
+            }
+        }
+
+        // Back button click handler
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             Debug.WriteLine("Back button clicked.");
-            // Handle Back button click
+            // Handle Back button click (e.g., navigate back)
         }
 
+        // Next button click handler
         private void NextButton_Click(object sender, RoutedEventArgs e)
         {
             Debug.WriteLine("Next button clicked.");
 
             // Get the copy count from the CopyCountTextBox
-            int copyCount = int.Parse(CopyCountTextBox.Text);
+            if (!int.TryParse(CopyCountTextBox.Text, out int copyCount) || copyCount < 1)
+            {
+                MessageBox.Show("Please specify a valid copy count.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             Debug.WriteLine($"Copy Count: {copyCount}");
 
+
+            // Create a List<int> for selected pages
+            List<int> selectedPageList = SelectedPages;
+
             // Create the uniquePricing control
-            uniquePricing pricingPage = new uniquePricing(
-                FileName,
-                PageSize,
-                ColorMode,
-                SelectedPages,
-                copyCount,
-                GetFileBytes()
-            );
+            _pricingQR = new PricingQR(
+                 filePath: FileName,           // FilePath
+                 fileName: FileName,           // FileName
+                 pageSize: PageSize,           // PageSize
+                 colorStatus: ColorMode,       // ColorMode
+                 numberOfSelectedPages: SelectedPages.Count, // SelectedPages (Corrected to number of selected pages)
+                 copyCount: copyCount,         // CopyCount
+                 selectedPages: selectedPageList, // SelectedPages list
+                 pageCount: SelectedPages.Count  // PageCount (assuming SelectedPages is the correct count)
+             );
+
+            // Set the filename in the PricingQR control
+            _pricingQR.SetFileName(FileName);
 
             // Access the MainWindow and set the content
             MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
 
             if (mainWindow != null)
             {
-                // Set the content of MainContent to the new UserControl (uniquePricing)
-                mainWindow.MainContent.Content = pricingPage;
+                // Set the content of MainContent to the new UserControl (PricingQR)
+                mainWindow.MainContent.Content = _pricingQR;
             }
             else
             {
-                // Handle error if MainWindow is null
                 MessageBox.Show("MainWindow instance is not available.");
             }
+
+            // Now, process preferences via PreferencesProcessor
+            PreferencesProcessor.ProcessPreferences(
+                filePath: FileName,
+                fileName: FileName,
+                pageSize: PageSize,
+                pageCount: SelectedPages.Count,
+                colorStatus: ColorMode,
+                selectedPages: SelectedPages.Count,
+                numberOfSelectedPages: SelectedPages.Count,
+                copyCount: copyCount
+            );
         }
 
+        // Helper method to generate selected pages list
+
+
+        // PreferencesProcessor class definition
+        public static class PreferencesProcessor
+        {
+            public static void ProcessPreferences(string filePath, string fileName, string pageSize, int pageCount, string colorStatus, int selectedPages, int numberOfSelectedPages, int copyCount)
+            {
+                // Your logic to process preferences here
+                Debug.WriteLine($"Processing Preferences for {fileName}:");
+                Debug.WriteLine($"File Path: {filePath}");
+                Debug.WriteLine($"FileName: {fileName}");
+                Debug.WriteLine($"PageSize: {pageSize}");
+                Debug.WriteLine($"ColorStatus: {colorStatus}");
+                Debug.WriteLine($"Selected Pages: {selectedPages}");
+                Debug.WriteLine($"Copy Count: {copyCount}");
+
+                // Additional logic can be added here based on these values, like saving preferences or calculating pricing.
+            }
+        }
     }
 }
