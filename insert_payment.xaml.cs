@@ -128,24 +128,40 @@ namespace kiosk_snapprint
             }
         }
 
+        //private void BackButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    // Send command to servo to reset to 0 degrees when back button is pressed
+        //    SendServoCommand("servo180");
+
+        //    // Navigate back to the home user control
+        //    HomeUserControl home = new HomeUserControl();
+
+        //    MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
+
+        //    if (mainWindow != null)
+        //    {
+        //        mainWindow.MainContent.Content = home;
+        //    }
+        //    else
+        //    {
+        //        MessageBox.Show("MainWindow instance is not available.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        //    }
+        //}
+
+
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            // Send command to servo to reset to 0 degrees when back button is pressed
-            SendServoCommand("servo180");
-
-            // Navigate back to the home user control
-            HomeUserControl home = new HomeUserControl();
-
-            MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
-
-            if (mainWindow != null)
+            // Create and display the cancel transaction modal
+            cancel_transaction_modal cancelModal = new cancel_transaction_modal
             {
-                mainWindow.MainContent.Content = home;
-            }
-            else
-            {
-                MessageBox.Show("MainWindow instance is not available.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+                Owner = Application.Current.MainWindow // Set the main window as the owner
+            };
+
+            // Pass the second serial port (COM9) to the modal so it can send a command if necessary
+            cancelModal.SecondSerialPort = _secondSerialPort;
+
+            // Show the modal dialog (blocks further interaction until closed)
+            cancelModal.ShowDialog();
         }
 
         private void SendServoCommand(string command)
@@ -178,8 +194,8 @@ namespace kiosk_snapprint
         {
             try
             {
-                // Introduce a 10-second delay
-                await Task.Delay(10000); // 10,000 milliseconds = 10 seconds
+                // Introduce a 3-second delay
+                await Task.Delay(3000);
 
                 // Create a new instance of the printing_try window
                 printing_try printingWindow = new printing_try(
@@ -194,21 +210,18 @@ namespace kiosk_snapprint
                     totalPrice: TotalPrice
                 );
 
-                // Show the printing_try window
-                printingWindow.Show();
+                // Set the owner of the modal to the current main window
+                printingWindow.Owner = Application.Current.MainWindow;
 
-                // Optionally hide the current main window to keep the process focused
-                Application.Current.MainWindow.Hide();
+                // Show the window as a modal
+                printingWindow.ShowDialog();
 
-                // Close the printing_try window after the process is complete
-                printingWindow.Closed += (s, e) =>
-                {
-                    Application.Current.MainWindow.Show();
-                };
+                // After modal closes, you can perform additional logic here if needed
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"An error occurred while navigating to the printing window: {ex.Message}",
+                // Handle any errors that occur
+                MessageBox.Show($"An error occurred while opening the printing window: {ex.Message}",
                                 "Error",
                                 MessageBoxButton.OK,
                                 MessageBoxImage.Error);

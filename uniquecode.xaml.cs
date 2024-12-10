@@ -27,34 +27,34 @@ namespace kiosk_snapprint
 
         private async void Proceed_Click(object sender, RoutedEventArgs e)
         {
-            string uniqueCode = TxtBox.Text.Trim();
+            //string uniqueCode = TxtBox.Text.Trim();
 
-            if (string.IsNullOrEmpty(uniqueCode))
-            {
-                MessageBox.Show("Please enter a valid unique code.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
+            //if (string.IsNullOrEmpty(uniqueCode))
+            //{
+            //    MessageBox.Show("Please enter a valid unique code.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+            //    return;
+            //}
 
-            try
-            {
-                // Attempt to retrieve the file based on the unique code
-                (byte[] fileBytes, string fileName) = await RetrieveFileAsync(uniqueCode);
+            //try
+            //{
+            //    // Attempt to retrieve the file based on the unique code
+            //    (byte[] fileBytes, string fileName) = await RetrieveFileAsync(uniqueCode);
 
-                if (fileBytes == null || fileBytes.Length == 0)
-                {
-                    MessageBox.Show("The file is empty or invalid.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
+            //    if (fileBytes == null || fileBytes.Length == 0)
+            //    {
+            //        MessageBox.Show("The file is empty or invalid.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            //        return;
+            //    }
 
-                // Navigate to the PDF display page with the retrieved file and filename
-                var mainWindow = (MainWindow)Application.Current.MainWindow;
-                var pdfDisplayPage = new PdfDisplayPage(fileBytes, fileName);
-                mainWindow.MainContent.Content = pdfDisplayPage;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"An error occurred while retrieving the file: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            //    // Navigate to the PDF display page with the retrieved file and filename
+            //    var mainWindow = (MainWindow)Application.Current.MainWindow;
+            //    var pdfDisplayPage = new PdfDisplayPage(fileBytes, fileName);
+            //    mainWindow.MainContent.Content = pdfDisplayPage;
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show($"An error occurred while retrieving the file: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            //}
         }
 
         private async Task<(byte[] fileBytes, string fileName)> RetrieveFileAsync(string uniqueCode)
