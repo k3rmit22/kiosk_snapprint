@@ -6,47 +6,46 @@ using System.Windows;
 using System.Windows.Controls;
 
 
-
 namespace kiosk_snapprint
 {
-    public partial class insert_payment : UserControl, IDisposable
+
+    public partial class Uniquecode_insert_payment : UserControl
     {
-        public string FilePath { get; private set; }
-        public string FileName { get; private set; }
-        public string PageSize { get; private set; }
-        public int PageCount { get; private set; }
-        public string ColorStatus { get; private set; }
-        public int NumberOfSelectedPages { get; private set; }
-        public int CopyCount { get; private set; }
-        public List<int> SelectedPages { get; private set; }
-        public double TotalPrice { get; private set; }
+        public byte[] FileBytes { get; set; }
+        public string FileName { get; set; }
+        public string PageSize { get; set; }
+        public string ColorMode { get; set; }
+        public List<int> SelectedPages { get; set; }
+        public int CopyCount { get; set; }
+        public int TotalPrice { get; set; }
 
         private SerialPort _serialPort; // For communication with payment hardware
         private SerialPort _secondSerialPort; // For communication with second hardware (e.g., servo)
 
-        private int _insertedAmount; // Tracks the inserted amount
+        private int _insertedAmount;
 
-        public insert_payment(string filePath, string fileName, string pageSize, int pageCount,
-                              string colorStatus, int numberOfSelectedPages, int copyCount,
-                              List<int> selectedPages, double totalPrice)
+        public Uniquecode_insert_payment(byte[] fileBytes, string fileName, string pageSize, string colorMode, List<int> selectedPages, int copyCount, int totalPrice)
         {
             InitializeComponent();
-
-            // Store passed values
-            FilePath = filePath;
+            FileBytes = fileBytes;
             FileName = fileName;
             PageSize = pageSize;
-            PageCount = pageCount;
-            ColorStatus = colorStatus;
-            NumberOfSelectedPages = numberOfSelectedPages;
-            CopyCount = copyCount;
+            ColorMode = colorMode;
             SelectedPages = selectedPages;
+            CopyCount = copyCount;
             TotalPrice = totalPrice;
 
             Loadsummary(FileName, TotalPrice);
+
             InitializeSerialPorts(); // Initialize both serial ports
             ResetInsertedAmount(); // Initialize the reset logic
             this.Unloaded += UserControl_Unloaded;
+        }
+
+        private void Loadsummary(string fileName, double totalPrice)
+        {
+            name_label.Text = fileName ?? "Unknown File";
+            total_label.Text = $"{totalPrice:F2}";
         }
 
         private void InitializeSerialPorts()
@@ -110,7 +109,7 @@ namespace kiosk_snapprint
             }
         }
 
-        private bool paymentCompleted = false; 
+        private bool paymentCompleted = false;
 
         private void CheckForPaymentCompletion()
         {
@@ -126,24 +125,6 @@ namespace kiosk_snapprint
                 // Proceed to the next step (navigate to the printing window)
                 NavigateToPrintingTryWindow();
             }
-        }
-
-   
-
-
-        private void BackButton_Click(object sender, RoutedEventArgs e)
-        {
-            // Create and display the cancel transaction modal
-            cancel_transaction_modal cancelModal = new cancel_transaction_modal
-            {
-                Owner = Application.Current.MainWindow // Set the main window as the owner
-            };
-
-            // Pass the second serial port (COM9) to the modal so it can send a command if necessary
-            cancelModal.SecondSerialPort = _secondSerialPort;
-
-            // Show the modal dialog (blocks further interaction until closed)
-            cancelModal.ShowDialog();
         }
 
         private void SendServoCommand(string command)
@@ -166,12 +147,6 @@ namespace kiosk_snapprint
             }
         }
 
-        private void Loadsummary(string fileName, double totalPrice)
-        {
-            name_label.Text = fileName ?? "Unknown File";
-            total_label.Text = $"{totalPrice:F2}";
-        }
-
         private async void NavigateToPrintingTryWindow()
         {
             try
@@ -180,16 +155,15 @@ namespace kiosk_snapprint
                 await Task.Delay(3000);
 
                 // Create a new instance of the printing_try window
-                printing_try printingWindow = new printing_try(
-                    filePath: FilePath,
-                    fileName: FileName,
-                    pageSize: PageSize,
-                    pageCount: PageCount,
-                    colorStatus: ColorStatus,
-                    numberOfSelectedPages: NumberOfSelectedPages,
-                    copyCount: CopyCount,
-                    selectedPages: SelectedPages,
-                    totalPrice: TotalPrice
+                 Unique_for_printing printingWindow = new Unique_for_printing(
+
+                    fileBytes: FileBytes,
+                    fileName : FileName,
+                    pageSize : PageSize,
+                    colorMode : ColorMode,
+                    selectedPages : SelectedPages,
+                    copyCount : CopyCount,
+                    totalPrice : TotalPrice
                 );
 
                 // Set the owner of the modal to the current main window
@@ -209,8 +183,6 @@ namespace kiosk_snapprint
                                 MessageBoxImage.Error);
             }
         }
-
-
 
         private void ResetInsertedAmount()
         {
@@ -284,6 +256,22 @@ namespace kiosk_snapprint
         {
             Debug.WriteLine("UserControl_Unloaded triggered.");
             Dispose();
+        }
+
+
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Create and display the cancel transaction modal
+            cancel_transaction_modal cancelModal = new cancel_transaction_modal
+            {
+                Owner = Application.Current.MainWindow // Set the main window as the owner
+            };
+
+            // Pass the second serial port (COM9) to the modal so it can send a command if necessary
+            cancelModal.SecondSerialPort = _secondSerialPort;
+
+            // Show the modal dialog (blocks further interaction until closed)
+            cancelModal.ShowDialog();
         }
     }
 }

@@ -50,6 +50,15 @@ namespace kiosk_snapprint
             LoadSummary(FileName, PageSize, ColorStatus, SelectedPages, CopyCount);
         }
 
+        public void SetFileName(string fileName)
+        {
+            FileName = fileName; // Update the FileName property
+            if (filename != null)
+            {
+                filename.Text = fileName; // Update the UI element if applicable
+            }
+        }
+
         private void LoadSummary(string fileName, string pageSize, string colorStatus, List<int> selectedPages, int copyCount)
         {
             // Normalize input values (automatically convert to lowercase and trim spaces)
