@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing.Imaging;
 using System.IO.Ports;
 using System.Windows;
 using System.Windows.Controls;
@@ -124,7 +125,7 @@ namespace kiosk_snapprint
                 SendServoCommand("servo0");
 
                 // Proceed to the next step (navigate to the printing window)
-                NavigateToPrintingTryWindow();
+                NavigateTotrayconnection();
             }
         }
 
@@ -172,15 +173,53 @@ namespace kiosk_snapprint
             total_label.Text = $"{totalPrice:F2}";
         }
 
-        private async void NavigateToPrintingTryWindow()
+        //private async void NavigateToPrintingTryWindow()
+        //{
+        //    try
+        //    {
+        //        // Introduce a 3-second delay
+        //        await Task.Delay(3000);
+
+        //        // Create a new instance of the printing_try window
+        //        printing_try printingWindow = new printing_try(
+        //            filePath: FilePath,
+        //            fileName: FileName,
+        //            pageSize: PageSize,
+        //            pageCount: PageCount,
+        //            colorStatus: ColorStatus,
+        //            numberOfSelectedPages: NumberOfSelectedPages,
+        //            copyCount: CopyCount,
+        //            selectedPages: SelectedPages,
+        //            totalPrice: TotalPrice
+        //        );
+
+        //        // Set the owner of the modal to the current main window
+        //        printingWindow.Owner = Application.Current.MainWindow;
+
+        //        // Show the window as a modal
+        //        printingWindow.ShowDialog();
+
+        //        // After modal closes, you can perform additional logic here if needed
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Handle any errors that occur
+        //        MessageBox.Show($"An error occurred while opening the printing window: {ex.Message}",
+        //                        "Error",
+        //                        MessageBoxButton.OK,
+        //                        MessageBoxImage.Error);
+        //    }
+        //}
+
+        private async void NavigateTotrayconnection()
         {
             try
             {
                 // Introduce a 3-second delay
                 await Task.Delay(3000);
 
-                // Create a new instance of the printing_try window
-                printing_try printingWindow = new printing_try(
+                // Create a new instance of the tray_connection_unique UserControl
+                Tray_connection_qr tray_connection = new Tray_connection_qr(
                     filePath: FilePath,
                     fileName: FileName,
                     pageSize: PageSize,
@@ -190,15 +229,14 @@ namespace kiosk_snapprint
                     copyCount: CopyCount,
                     selectedPages: SelectedPages,
                     totalPrice: TotalPrice
+
                 );
 
-                // Set the owner of the modal to the current main window
-                printingWindow.Owner = Application.Current.MainWindow;
+                // Set the UserControl as the content of the ContentControl in your main window
+                var mainWindow = (MainWindow)Application.Current.MainWindow;
+                mainWindow.MainContent.Content = tray_connection;
 
-                // Show the window as a modal
-                printingWindow.ShowDialog();
-
-                // After modal closes, you can perform additional logic here if needed
+                // Optionally, perform additional actions if needed after the control is loaded
             }
             catch (Exception ex)
             {

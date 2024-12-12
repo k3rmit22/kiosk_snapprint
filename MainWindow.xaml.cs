@@ -150,6 +150,11 @@ namespace kiosk_snapprint
             MainContent.Content = uniquecodePage;
         }
 
+        public void NavigateToUserControl(UserControl userControl)
+        {
+            MainContent.Content = userControl; // Assuming MainContent is the ContentControl in your MainWindow
+        }
+
 
 
 
