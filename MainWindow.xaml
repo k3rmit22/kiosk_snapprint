@@ -34,7 +34,7 @@
                 <Image Source="/wow.png" Margin="488,40,473,56" Grid.Column="1" />
 
                 <!-- Label -->
-                <Label Content="HOW WOULD YOU LIKE TO PRINT?" 
+                <Label Content="HOW WOULD YOU LIKE TO PRIadwNT?" 
                         HorizontalAlignment="Left" 
                         VerticalAlignment="Top" 
                         FontWeight="Bold" 
