@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:kiosk_snapprint"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" Background="#FFFDFDFD">
-   
+
     <Viewbox Margin="0,20,50,0">
         <Grid>
 
@@ -20,35 +20,33 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0*"/>
                         <ColumnDefinition Width="*" />
-                        <!-- Use * to make it flexible -->
                     </Grid.ColumnDefinitions>
 
                     <!-- First image -->
                     <Image Margin="343,30,350,304" Grid.Column="1" Grid.RowSpan="2" />
 
                     <!-- Second image -->
-                    <Image Source="/wow.png"  Height="450" Width="450" Margin="480,33,480,63" Grid.Column="1" />
+                    <Image Source="/wow.png" Height="450" Width="450" Margin="480,33,480,63" Grid.Column="1" />
 
                     <!-- Label -->
                     <Label Content="HOW WOULD YOU LIKE TO PRINT?" 
-                      HorizontalAlignment="Left" 
-                      VerticalAlignment="Top" 
-                      FontWeight="Bold" 
-                      FontSize="70" 
-                      Grid.Column="1" 
-                      Margin="292,440,0,0" 
-                      Width="1174" Height="120" Grid.RowSpan="2" />
+                           HorizontalAlignment="Left" 
+                           VerticalAlignment="Top" 
+                           FontWeight="Bold" 
+                           FontSize="70" 
+                           Grid.Column="1" 
+                           Margin="292,440,0,0" 
+                           Width="1174" Height="120" Grid.RowSpan="2" />
 
                     <!-- Button 1: Scan QR Code -->
                     <Button HorizontalAlignment="Left" 
-                       Height="350" 
-                       Margin="82,179,0,0" 
-                       VerticalAlignment="Top" 
-                       Width="350" 
-                       Background="White" 
-                       Grid.Column="1"
-                       Click="GoToQRCodePage_Click" Grid.Row="1" BorderBrush="Black" BorderThickness="5,5,5,5">
-
+                            Height="350" 
+                            Margin="82,179,0,0" 
+                            VerticalAlignment="Top" 
+                            Width="350" 
+                            Background="White" 
+                            Grid.Column="1"
+                            Click="GoToQRCodePage_Click" Grid.Row="1" BorderBrush="Black" BorderThickness="5,5,5,5">
                         <StackPanel Orientation="Vertical" Height="209">
                             <Image Source="/scanner.png" Height="178" Width="200" Stretch="UniformToFill" />
                             <TextBlock Text="Scan QR Code" HorizontalAlignment="Center" FontWeight="Bold" FontSize="20" />
@@ -57,12 +55,12 @@
 
                     <!-- Button 2: Flash Drive -->
                     <Button HorizontalAlignment="Left" 
-                       Height="350" 
-                       Margin="751,173,0,0" 
-                       VerticalAlignment="Top" 
-                       Width="350" 
-                       Background="White" 
-                       Grid.Column="1" Click="Button_Click" Grid.Row="1" BorderThickness="5,5,5,5" BorderBrush="Black">
+                            Height="350" 
+                            Margin="751,173,0,0" 
+                            VerticalAlignment="Top" 
+                            Width="350" 
+                            Background="White" 
+                            Grid.Column="1" Click="Button_Click" Grid.Row="1" BorderThickness="5,5,5,5" BorderBrush="Black">
                         <StackPanel Orientation="Vertical">
                             <Image Source="/flashdrive.png" Height="184" Width="200" Stretch="UniformToFill" />
                             <TextBlock Text="Flash Drive" HorizontalAlignment="Center" FontWeight="Bold" FontSize="20" />
@@ -71,21 +69,32 @@
 
                     <!-- Button 3: Enter Unique Code -->
                     <Button HorizontalAlignment="Left" 
-                       Height="350" 
-                       Margin="1418,173,0,0" 
-                       VerticalAlignment="Top" 
-                       Width="350" 
-                       Background="White" 
-                       Grid.Column="1" Click="Button_Click_1" Grid.Row="1" BorderBrush="Black" BorderThickness="5,5,5,5">
+                            Height="350" 
+                            Margin="1418,173,0,0" 
+                            VerticalAlignment="Top" 
+                            Width="350" 
+                            Background="White" 
+                            Grid.Column="1" Click="Button_Click_1" Grid.Row="1" BorderBrush="Black" BorderThickness="5,5,5,5">
                         <StackPanel Orientation="Vertical">
                             <Image Source="/passcode.png" Height="178" Width="200" />
                             <TextBlock Text="Enter Unique Code" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" />
                         </StackPanel>
                     </Button>
 
+                    <!-- Report Button at Top Right -->
+                    <Button HorizontalAlignment="Right" VerticalAlignment="Top"
+                            Width="164" Height="160" Margin="0,-79,-216,0"
+                            Background="White" BorderBrush="Black" BorderThickness="2,2,2,2"
+                            Click="ReportButton_Click" Grid.Column="1">
+
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Image Source="/report.png" Width="100" Height="100" />
+                            <TextBlock Text="Report" FontSize="30" FontWeight="Bold" HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+
                 </Grid>
             </ContentControl>
         </Grid>
-
     </Viewbox>
 </UserControl>

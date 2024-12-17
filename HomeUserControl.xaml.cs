@@ -46,5 +46,10 @@ namespace kiosk_snapprint
             MainContent.Content = uniquecodePage;
 
         }
+
+        private void ReportButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
