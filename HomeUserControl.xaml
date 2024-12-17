@@ -88,7 +88,7 @@
                             Click="ReportButton_Click" Grid.Column="1">
 
                         <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <Image Source="/report.png" Width="100" Height="100" />
+                            <Image Source="/wew.png" Width="100" Height="100" />
                             <TextBlock Text="Report" FontSize="30" FontWeight="Bold" HorizontalAlignment="Center" />
                         </StackPanel>
                     </Button>
