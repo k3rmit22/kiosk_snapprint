@@ -5,13 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:kiosk_snapprint"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800" Background="#FFFDFDFD">
+             d:DesignHeight="450" d:DesignWidth="800" Background="White">
 
     <Viewbox Margin="0,20,50,0">
         <Grid>
 
             <!-- ContentControl that will hold dynamic content -->
-            <ContentControl x:Name="MainContent" Margin="0,0,-72,0">
+            <ContentControl x:Name="MainContent" Margin="-36,0,-36,0">
                 <Grid Margin="15,60,20,50">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="109*"/>
@@ -19,14 +19,15 @@
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0*"/>
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="1395*" />
+                        <ColumnDefinition Width="373*"/>
                     </Grid.ColumnDefinitions>
 
                     <!-- First image -->
-                    <Image Margin="343,30,350,304" Grid.Column="1" Grid.RowSpan="2" />
+                    <Image Margin="343,30,350,304" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="2" />
 
                     <!-- Second image -->
-                    <Image Source="/wow.png" Height="450" Width="450" Margin="480,33,480,63" Grid.Column="1" />
+                    <Image Source="/wow.png" Height="450" Width="450" Margin="659,33,286,63" Grid.Column="1" />
 
                     <!-- Label -->
                     <Label Content="HOW WOULD YOU LIKE TO PRINT?" 
@@ -36,7 +37,7 @@
                            FontSize="70" 
                            Grid.Column="1" 
                            Margin="292,440,0,0" 
-                           Width="1174" Height="120" Grid.RowSpan="2" />
+                           Width="1174" Height="120" Grid.RowSpan="2" Grid.ColumnSpan="2" />
 
                     <!-- Button 1: Scan QR Code -->
                     <Button HorizontalAlignment="Left" 
@@ -70,11 +71,11 @@
                     <!-- Button 3: Enter Unique Code -->
                     <Button HorizontalAlignment="Left" 
                             Height="350" 
-                            Margin="1418,173,0,0" 
+                            Margin="23,173,0,0" 
                             VerticalAlignment="Top" 
                             Width="350" 
                             Background="White" 
-                            Grid.Column="1" Click="Button_Click_1" Grid.Row="1" BorderBrush="Black" BorderThickness="5,5,5,5">
+                            Grid.Column="2" Click="Button_Click_1" Grid.Row="1" BorderBrush="Black" BorderThickness="5,5,5,5">
                         <StackPanel Orientation="Vertical">
                             <Image Source="/passcode.png" Height="178" Width="200" />
                             <TextBlock Text="Enter Unique Code" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" />
@@ -84,11 +85,11 @@
                     <!-- Report Button at Top Right -->
                     <Button HorizontalAlignment="Right" VerticalAlignment="Top"
                             Width="164" Height="160" Margin="0,-79,-216,0"
-                            Background="#FFFDFDFD" BorderBrush="Black" BorderThickness="0,0,0,0"
-                            Click="ReportButton_Click" Grid.Column="1">
+                            Background="White" BorderBrush="Black" BorderThickness="0,0,0,0"
+                            Click="ReportButton_Click" Grid.Column="2">
 
                         <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <Image Source="/report.png" Width="100" Height="100" />
+                            <Image Source="/report.png" Width="100" Height="100" Stretch="UniformToFill" />
                             <TextBlock Text="Report" FontSize="30" FontWeight="Bold" HorizontalAlignment="Center" />
                         </StackPanel>
                     </Button>

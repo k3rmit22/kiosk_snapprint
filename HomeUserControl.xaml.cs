@@ -49,6 +49,8 @@ namespace kiosk_snapprint
 
         private void ReportButton_Click(object sender, RoutedEventArgs e)
         {
+            Report ReportPage = new Report();
+            MainContent.Content = ReportPage;
 
         }
     }
